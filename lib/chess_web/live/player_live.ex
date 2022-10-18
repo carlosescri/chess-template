@@ -19,7 +19,10 @@ defmodule ChessWeb.PlayerLive do
 
     if connected?(socket) do
       with {:ok, state, player} <- GameServer.join(socket.assigns.game_name) do
-        {:noreply, assign(socket, state: state, player: player)}
+        {:noreply,
+         socket
+         |> assign(state: state, player: player)
+         |> set_turn(state)}
       else
         {:error, msg} ->
           {:noreply,
@@ -35,9 +38,21 @@ defmodule ChessWeb.PlayerLive do
   def handle_event(
         "click-cell",
         %{"x" => x, "y" => y},
+        socket
+      )
+      when socket.assigns.state.turn != socket.assigns.player do
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "click-cell",
+        %{"x" => x, "y" => y},
         %{assigns: %{cell_selected: nil}} = socket
       ) do
-    {:noreply, assign(socket, cell_selected: {String.to_integer(x), String.to_integer(y)})}
+    {:noreply,
+     socket
+     |> assign(cell_selected: {String.to_integer(x), String.to_integer(y)})
+     |> clear_flash(:error)}
   end
 
   def handle_event("click-cell", %{"x" => x, "y" => y}, socket) do
@@ -46,17 +61,20 @@ defmodule ChessWeb.PlayerLive do
 
     my_pieces = Map.get(socket.assigns.state, socket.assigns.player)
 
-    {:ok, state} =
+    socket =
       case find_piece(socket.assigns.cell_selected, my_pieces) do
-        {:found, piece} -> GameServer.move(socket.assigns.game_name, {piece, {x,y}})
-        :not_found -> {:ok, socket.assigns.state}
+        {:found, piece} -> move(socket, piece, {x, y})
+        :not_found -> socket
       end
 
-    {:noreply, assign(socket, state: state, cell_selected: nil)}
+    {:noreply, assign(socket, cell_selected: nil)}
   end
 
-  def handle_info({:enemy_moved, new_state}, socket) do
-    {:noreply, assign(socket, state: new_state)}
+  def handle_info({:opponent_moved, new_state}, socket) do
+    {:noreply,
+     socket
+     |> set_turn(new_state)
+     |> assign(state: new_state)}
   end
 
   def render(assigns) do
@@ -117,4 +135,19 @@ defmodule ChessWeb.PlayerLive do
   end
 
   defp find_piece(_position, []), do: :not_found
+
+  defp set_turn(socket, state) do
+    if socket.assigns.player == state.turn do
+      put_flash(socket, :info, "It's your turn. Move!")
+    else
+      put_flash(socket, :info, "It's the opponent turn. Wait.")
+    end
+  end
+
+  defp move(socket, piece, position) do
+    case GameServer.move(socket.assigns.game_name, {piece, position}) do
+      {:ok, state} -> socket |> set_turn(state) |> assign(state: state)
+      {:error, msg} -> put_flash(socket, :error, msg)
+    end
+  end
 end

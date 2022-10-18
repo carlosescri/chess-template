@@ -65,8 +65,13 @@ defmodule Chess.Game do
       |> Map.get(player)
       |> Enum.map(&if(&1 == piece, do: %{piece | position: {x, y}}, else: &1))
 
-    Map.put(state, player, player_updated_pieces)
+    state
+    |> Map.put(player, player_updated_pieces)
+    |> Map.put(:turn, other_player(player))
   end
 
   defp out_of_table?(x, y), do: x < 0 or x > 7 or y < 0 or y > 7
+
+  defp other_player(:white), do: :black
+  defp other_player(:black), do: :white
 end

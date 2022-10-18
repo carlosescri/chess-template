@@ -39,15 +39,19 @@ defmodule Chess.GameServer do
 
   @impl true
   def handle_call({:move, movement}, {pid, _}, {game, players} = state) do
-    {:ok, new_game} = Game.move(game, movement, players[pid])
-
-    Process.send(
+    case Game.move(game, movement, players[pid]) do
+      {:ok, new_game} ->
+        Process.send(
           get_the_other_pid(pid, players),
-          {:enemy_moved, new_game},
+          {:opponent_moved, new_game},
           []
         )
 
-    {:reply, {:ok, new_game}, {new_game, players}}
+        {:reply, {:ok, new_game}, {new_game, players}}
+
+      {:error, msg} ->
+        {:reply, {:error, msg}, state}
+    end
   end
 
   defp get_the_other_pid(pid, players) do
