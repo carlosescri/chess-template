@@ -1,0 +1,8 @@
+<main class="container">
+<h2>jelou</h2>
+<%= @game.white_player.pieces[{0, 0}] %>
+<%= @game.start_date %>
+<button phx-target="{ @myself }" phx-click="join-player">Add to game</button>
+
+
+</main>
