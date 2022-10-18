@@ -27,7 +27,7 @@ defmodule Chess.Board do
     end
   end
 
-  def is_piece(x, y, pieces) do
+  def draw_piece(x, y, pieces) do
     pieces
     |> Map.get("#{y}#{x}")
     |> piece_into_class()

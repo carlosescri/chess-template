@@ -64,8 +64,8 @@ defmodule ChessWeb.GameLive do
               phx-click="move_piece_to"
               phx-value-square={"#{y}#{x}"}
             >
-              <%= if is_piece(x, y, @pieces) do %>
-                <div class={"figure #{is_piece(x, y, @pieces)}"}
+              <%= if draw_piece(x, y, @pieces) do %>
+                <div class={"figure #{draw_piece(x, y, @pieces)}"}
                   phx-click="move_piece_from"
                   phx-value-square={"#{y}#{x}"}
             />
