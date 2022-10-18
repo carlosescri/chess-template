@@ -4,8 +4,8 @@ defmodule ChessWeb.BoardLive do
   def update(assigns, socket) do
   {:ok,
   socket
-  |> assign(assigns)
-  |> assign_initial_position()}
+  |> assign(:chess_game_topic_id, assigns.id)
+  |> assign(:pieces, assigns.pieces)}
   end
 
   @impl Phoenix.LiveView
@@ -13,47 +13,21 @@ defmodule ChessWeb.BoardLive do
     {x, _} = Integer.parse(x)
     {y, _} = Integer.parse(y)
     square = x_y_into_chess_square(x, y)
-    pieces = Map.delete(socket.assigns.pieces, square)
-    {:noreply,
-     assign(socket, :pieces, pieces)}
+    {:noreply, handle_piece_moved(socket, "bk", square)}
   end
 
-  defp assign_initial_position(socket) do
-    initial_position = %{
-      "A1" => {false, "r"},
-      "A2" => {false, "kn"},
-      "A3" => {false, "b"},
-      "A4" => {false, "q"},
-      "A5" => {false, "k"},
-      "A6" => {false, "b"},
-      "A7" => {false, "kn"},
-      "A8" => {false, "r"},
-      "B1" => {false, "p"},
-      "B2" => {false, "p"},
-      "B3" => {false, "p"},
-      "B4" => {false, "p"},
-      "B5" => {false, "p"},
-      "B6" => {false, "p"},
-      "B7" => {false, "p"},
-      "B8" => {false, "p"},
-      "H1" => {true, "r"},
-      "H2" => {true, "kn"},
-      "H3" => {true, "b"},
-      "H4" => {true, "q"},
-      "H5" => {true, "k"},
-      "H6" => {true, "b"},
-      "H7" => {true, "kn"},
-      "H8" => {true, "r"},
-      "G1" => {true, "p"},
-      "G2" => {true, "p"},
-      "G3" => {true, "p"},
-      "G4" => {true, "p"},
-      "G5" => {true, "p"},
-      "G6" => {true, "p"},
-      "G7" => {true, "p"},
-      "G8" => {true, "p"},
-    }
-    assign(socket, :pieces, initial_position)
+  defp handle_piece_moved(
+    %{assigns: %{pieces: pieces}} = socket,
+    piece,
+    square
+  ) do
+    ChessWeb.Endpoint.broadcast(socket.assigns.chess_game_topic_id, "piece_moved", %{"square" => square})
+    socket
+    |> put_flash(:info, "Rating submitted successfully")
+    |> assign(
+    :pieces,
+    Map.delete(socket.assigns.pieces, square)
+    )
   end
 
   defp get_square_color(x, y) do
