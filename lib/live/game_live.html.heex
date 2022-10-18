@@ -1,0 +1,15 @@
+<section>
+    <div class="board">
+        <%= for row <- 0..7 do %>
+            <%= for column <- 0..7 do %>
+            <% square_color = if rem(row + column, 2) == 1, do: :black, else: :white %>
+                <div class={"square #{square_color}"}>
+                    <% token = Map.get(@state, {row, column}) %>
+                    <%= if token !== nil do %>
+                        <div class={"figure #{token.colour} #{token.piece}"}></div>
+                    <% end %>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+</section>

@@ -20,6 +20,12 @@ defmodule ChessWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/game", ChessWeb do
+    pipe_through :browser
+
+    live("/:game_name", GameLive, :index)
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ChessWeb do
   #   pipe_through :api
