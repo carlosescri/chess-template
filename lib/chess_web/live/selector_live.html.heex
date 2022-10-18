@@ -1,0 +1,13 @@
+<div classs="container" id="selector" phx-hook="LocalStateStore">
+  <h2>Please select your name and your room to play</h2>
+  <%= form_for :form, "#", [phx_submit: "send"], fn f -> %>
+      <%= label f, :username %>
+      <%= text_input f, :username, value: @username, min: 4 %>
+
+      <%= label f, :room %>
+      <%= text_input f, :room, value: @room, min: 4 %>
+
+      <button phx-click="random-room" title="Random Room" type="button">Random Room</button>
+      <button title="Play" type="submit">Let's play!</button>
+  <% end %>
+</div>

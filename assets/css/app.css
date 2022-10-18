@@ -135,6 +135,10 @@
   grid-template-rows: repeat(8, var(--square-size));
 }
 
+.selected {
+  background-color: #607d8bc4 !important;
+}
+
 .square {
   display: flex;
   justify-content: center;
