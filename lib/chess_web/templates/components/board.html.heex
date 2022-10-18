@@ -1,9 +1,7 @@
-<p>This is a board</p>
-
 <div class="board">
   <%= for row <- 0..7 do %>
     <%= for col <- 0..7 do %>
-      <.square row={row} col={col}>
+      <.square figure={get_figure(@state, row, col)} row={row} col={col}>
         <%= if get_figure(@state, row, col) do %>
           <div class={"figure #{get_figure_class(@state, row, col)}"}></div>
         <% end %>

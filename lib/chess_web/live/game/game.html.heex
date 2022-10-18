@@ -1,9 +1,18 @@
 <%= if @connected do %>
 <section>
-  <span>Playing as: <%= @user %></span>
-  <button phx-click="move">
-    MOVE
-  </button>
+  <span>Playing as: <b><%= @user %></b> on game: <b><%= @game_id %></b>. Share this code to your friends to play against them.</span>
+
+  <%= if show_start_button(@is_leader, @status) do %>
+    <button phx-click="start_game">START GAME</button>
+  <% end %>
+
+  <p>Status: <%= @status %></p>
+
+  <%= if @status == :playing do %>
+    <p>Turn: <%= @turn %></p>
+    <p>Playing as: <%= @figures %></p>
+  <% end %>
+  <p>Connected players: <%= @players %></p>
   <Components.board state={@board} />
 </section>
 <% else %>

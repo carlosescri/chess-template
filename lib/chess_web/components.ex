@@ -14,13 +14,10 @@ defmodule ChessWeb.Components do
     render("square.html", assigns)
   end
 
-  def get_color(row, col) when is_even(row) and is_even(col) or is_odd(row) and is_odd(col)do
-    "white"
-  end
+  def get_color(row, col) when is_even(row + col), do: "white"
 
-  def get_color(row, col) when is_even(row) and is_odd(col) or is_odd(row) and is_even(col) do
-    "black"
-  end
+  def get_color(_, _), do: "black"
+
 
   def get_figure(board, row, col) do
     Board.get_at(board, row, col)
@@ -30,5 +27,9 @@ defmodule ChessWeb.Components do
     %Figure{color: color, type: type} = get_figure(board, row, col)
 
     "#{color} #{type}"
+  end
+
+  def is_selectable(figure) do
+    if is_nil(figure), do: "", else: "selectable"
   end
 end

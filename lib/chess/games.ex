@@ -6,8 +6,10 @@ defmodule Chess.Games do
 
   @registry :game_registry
   @initial_state %{
-    players: [],
-    turn: 0,
+    id: nil,
+    leader: nil,
+    players: MapSet.new(),
+    turn: :no_turn,
     status: :waiting_for_players,
     board: Board.default_board()
   }
@@ -22,10 +24,16 @@ defmodule Chess.Games do
     |> GenServer.call(:log_state)
   end
 
-  def add_player(process_name, player_name) do
-    process_name
+  def get_game(game_id) do
+    game_id
     |> via_tuple()
-    |> GenServer.call({:add_player, player_name})
+    |> GenServer.call(:get_game)
+  end
+
+  def add_player(game_id, player_name) do
+    game_id
+    |> via_tuple()
+    |> GenServer.call({:add_player, player_name, game_id})
   end
 
   def get_current_players(process_name) do
@@ -43,7 +51,13 @@ defmodule Chess.Games do
   def move_figure(game_id, user, from, to) do
     game_id
     |> via_tuple()
-    |> GenServer.call({:move_figure, game_id, user, from, to})
+    |> GenServer.cast({:move_figure, game_id, user, from, to})
+  end
+
+  def start_game(game_id) do
+    game_id
+    |> via_tuple()
+    |> GenServer.cast(:start_game)
   end
 
   def child_spec(process_name) do
@@ -64,7 +78,7 @@ defmodule Chess.Games do
   @impl true
   def init(name) do
     Logger.info("Starting process #{name}")
-    {:ok, @initial_state}
+    {:ok, Map.put(@initial_state, :id, name)}
   end
 
   @impl true
@@ -72,14 +86,52 @@ defmodule Chess.Games do
     {:reply, "State: #{inspect(state)}", state}
   end
 
-  @impl true
-  def handle_call({:add_player, new_player}, _from, state) do
-    new_state =
-      Map.update!(state, :players, fn existing_players ->
-        [new_player | existing_players]
-      end)
+  def handle_call(:get_game, _from, state) do
+    {:reply, state, state}
+  end
 
-    {:reply, :player_added, new_state}
+  def handle_cast(:start_game, state) do
+    IO.puts("Starting the game...")
+    new_state =
+      state
+      |> Map.put(:status, :playing)
+      |> Map.put(:turn, :white)
+
+    broadcast(Map.get(state, :id), "start_game", new_state)
+    {:noreply, }
+  end
+
+  @impl true
+  def handle_call({:add_player, new_player, game_id}, _from, state) do
+    new_state =
+      Map.update!(state, :players, fn players -> MapSet.put(players, new_player) end)
+
+    current_players =
+      new_state
+      |> Map.get(:players)
+      |> MapSet.size()
+
+    result = case current_players do
+      1 -> :player_added_leader
+      2 -> :player_added
+      _ -> :viewer_added
+    end
+
+    new_state = case result do
+      :player_added_leader ->
+        Map.put(new_state, :leader, new_player)
+      :player_added ->
+        if Map.get(new_state, :status) == :waiting_for_players do
+          Map.put(new_state, :status, :ready)
+        else
+          new_state
+        end
+      _ -> new_state
+    end
+
+    broadcast(game_id, "player_connected", new_state)
+
+    {:reply, result, new_state}
   end
 
   def handle_call({:get_current_players}, _from, state) do
@@ -91,14 +143,11 @@ defmodule Chess.Games do
     {:reply, board, state}
   end
 
-  def handle_call({:move_figure, game_id, user, from, to}, _from, state) do
+  def handle_cast({:move_figure, game_id, user, from, to}, state) do
     board = Map.get(state, :board)
-
     new_board = Board.move_figure(board, from, to)
-
     broadcast(game_id, "update_board", new_board)
-
-    {:reply, new_board, Map.put(state, :board, new_board)}
+    {:noreply, Map.put(state, :board, new_board)}
   end
 
   defp via_tuple(name) do
