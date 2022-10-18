@@ -1,6 +1,8 @@
 defmodule ChessWeb.Router do
   use ChessWeb, :router
 
+  alias ChessWeb.GameLive
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -18,6 +20,14 @@ defmodule ChessWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  scope "/game" do
+    pipe_through :browser
+
+    live_session :games do
+      live "/:game_id", GameLive, :index
+    end
   end
 
   # Other scopes may use custom stacks.

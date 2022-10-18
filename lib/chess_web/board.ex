@@ -80,7 +80,7 @@ defmodule ChessWeb.Board do
       "G4" => "",
       "G5" => "",
       "G6" => "",
-      "G7" => "figure white pawn",
+      "G7" => "figure black pawn",
       "G8" => "figure black knight",
 
       "H1" => "figure white rook",
