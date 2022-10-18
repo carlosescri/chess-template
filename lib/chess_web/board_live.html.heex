@@ -4,7 +4,13 @@
       <%= for x <- 1..8 do %>
         <div class={"square #{get_square_color(x, y)}"}>
           <%= if is_piece(x, y, @pieces) do %>
-            <div class={"figure #{is_piece(x, y, @pieces)}"}></div>
+            <div class={"figure #{is_piece(x, y, @pieces)}"}
+              phx-click="move_piece"
+              phx-target={@myself}
+              phx-value-x={x}
+              phx-value-y={y}
+            >
+            </div>
           <% end %>  
         </div>
       <% end %>

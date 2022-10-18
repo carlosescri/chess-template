@@ -8,6 +8,16 @@ defmodule ChessWeb.BoardLive do
   |> assign_initial_position()}
   end
 
+  @impl Phoenix.LiveView
+  def handle_event("move_piece", %{"x" => x, "y" => y}, socket) do
+    {x, _} = Integer.parse(x)
+    {y, _} = Integer.parse(y)
+    square = x_y_into_chess_square(x, y)
+    pieces = Map.delete(socket.assigns.pieces, square)
+    {:noreply,
+     assign(socket, :pieces, pieces)}
+  end
+
   defp assign_initial_position(socket) do
     initial_position = %{
       "A1" => {false, "r"},
