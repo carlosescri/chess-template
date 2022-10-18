@@ -18,11 +18,9 @@ defmodule Chess.Games.Game do
 
   @type t :: %__MODULE__{
           game_name: binary,
-          start_date: NaiveDateTime.t() | nil,
-          finish_date: NaiveDateTime.t() | nil,
           winner: binary | nil,
-          white_player: binary | nil,
-          black_player: binary | nil,
+          white_player: player,
+          black_player: player,
           player_turn: nil | :white | :black,
           dashboard: list
         }
