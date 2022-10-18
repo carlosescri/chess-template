@@ -60,16 +60,14 @@ defmodule ChessWeb.GameLive do
       <div class="board">
         <%= for y <- 8..1 do %>
           <%= for x <- 1..8 do %>
-            <div class={"square #{get_square_color(x, y, @selected_square)}"} id={"#{x}#{y}"}
+            <div class={"square #{get_square_color(y, x, @selected_square)}"}
               phx-click="move_piece_to"
-              phx-value-x={x}
-              phx-value-y={y}
+              phx-value-square={"#{y}#{x}"}
             >
               <%= if is_piece(x, y, @pieces) do %>
                 <div class={"figure #{is_piece(x, y, @pieces)}"}
                   phx-click="move_piece_from"
-                  phx-value-x={x}
-                  phx-value-y={y}
+                  phx-value-square={"#{y}#{x}"}
             />
               <% end %>
             </div>
@@ -89,11 +87,10 @@ defmodule ChessWeb.GameLive do
     end
 
     @impl Phoenix.LiveView
-    def handle_event("move_piece_from", %{"x" => x, "y" => y}, socket) do
-      {x, _} = Integer.parse(x)
-      {y, _} = Integer.parse(y)
-      square = x_y_into_chess_square(x, y)
+    def handle_event("move_piece_from", %{"square" => square}, socket) do
+      IO.inspect(square)
       selected_square = socket.assigns.selected_square
+      IO.inspect(selected_square)
       if square == selected_square do
         selected_square == nil
       end
@@ -105,11 +102,8 @@ defmodule ChessWeb.GameLive do
 
     def handle_event(
       "move_piece_to",
-      %{"x" => x, "y" => y},
+      %{"square" => square},
       %{assigns: %{selected_square: selected_square}} = socket) do
-      {x, _} = Integer.parse(x)
-      {y, _} = Integer.parse(y)
-      square = x_y_into_chess_square(x, y)
       GameServer.move_piece(socket.assigns.pid, %{"old_square" => selected_square, "new_square" => square})
       {:noreply, handle_piece_moved(socket, square)}
     end

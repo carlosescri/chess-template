@@ -10,9 +10,9 @@ defmodule Chess.Board do
   def get_y_dimension(), do: @y_dimension
 
 
-  def get_square_color(x, y, selected_square) do
+  def get_square_color(y, x, selected_square) do
     # TODO: Fix this shit
-    if selected_square == x_y_into_chess_square(x, y) do
+    if selected_square == "#{y}#{x}" do
       "selected"
     else
       if rem(y, 2) == 0 do
@@ -32,19 +32,14 @@ defmodule Chess.Board do
   end
 
   def is_piece(x, y, pieces) do
-    letter = x_y_into_chess_square(x, y)
-    piece = Map.get(pieces, letter)
-    piece_into_class(piece)
-  end
-
-  def x_y_into_chess_square(x, y) do
-    letter = List.to_string([64 + y])
-    "#{letter}#{x}"
+    pieces
+    |> Map.get("#{y}#{x}")
+    |> piece_into_class()
   end
 
   def piece_into_class(nil), do: nil
   def piece_into_class({is_black, type}) do
-    "#{black_into_class(is_black)} #{type_into_class(type)}"
+    "#{black_into_class(is_black)} #{type}"
   end
 
   def black_into_class(true), do: "black"
