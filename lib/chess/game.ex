@@ -47,17 +47,22 @@ defmodule Chess.Game do
   end
 
   def move(state, movement, player) do
-    if legal?(state, movement, player) |> IO.inspect() do
+    if legal?(state, movement, player) do
       {:ok, apply_movement(state, movement, player)}
     else
       {:error, "illegal movement"}
     end
   end
 
-  defp legal?(state, {piece, {x, y}}, player) do
-    not out_of_table?(x, y) and
-      Piece.legal?({x, y}, piece)
+  def find_piece(position, [piece | rest]) do
+    if piece.position == position do
+      piece
+    else
+      find_piece(position, rest)
+    end
   end
+
+  def find_piece(_position, []), do: nil
 
   defp apply_movement(state, {piece, {x, y}}, player) do
     player_updated_pieces =
@@ -65,13 +70,26 @@ defmodule Chess.Game do
       |> Map.get(player)
       |> Enum.map(&if(&1 == piece, do: %{piece | position: {x, y}}, else: &1))
 
+    eaten_piece = find_piece({x, y}, Map.get(state, opponent(player)))
+
+    opponent_updated_pieces =
+      state
+      |> Map.get(opponent(player))
+      |> Enum.reject(&(&1 == eaten_piece))
+
     state
     |> Map.put(player, player_updated_pieces)
-    |> Map.put(:turn, other_player(player))
+    |> Map.put(opponent(player), opponent_updated_pieces)
+    |> Map.put(:turn, opponent(player))
+  end
+
+  defp legal?(state, {piece, {x, y}}, player) do
+    not out_of_table?(x, y) and
+      Piece.legal?({x, y}, piece)
   end
 
   defp out_of_table?(x, y), do: x < 0 or x > 7 or y < 0 or y > 7
 
-  defp other_player(:white), do: :black
-  defp other_player(:black), do: :white
+  defp opponent(:white), do: :black
+  defp opponent(:black), do: :white
 end

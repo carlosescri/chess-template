@@ -3,6 +3,7 @@ defmodule ChessWeb.PlayerLive do
   require Integer
 
   alias Chess.GameServer
+  alias Chess.Game
 
   @impl Phoenix.LiveView
   def mount(%{"game_name" => game_name}, _session, socket) do
@@ -62,9 +63,9 @@ defmodule ChessWeb.PlayerLive do
     my_pieces = Map.get(socket.assigns.state, socket.assigns.player)
 
     socket =
-      case find_piece(socket.assigns.cell_selected, my_pieces) do
-        {:found, piece} -> move(socket, piece, {x, y})
-        :not_found -> socket
+      case Game.find_piece(socket.assigns.cell_selected, my_pieces) do
+        nil -> socket
+        piece -> move(socket, piece, {x, y})
       end
 
     {:noreply, assign(socket, cell_selected: nil)}
@@ -85,7 +86,7 @@ defmodule ChessWeb.PlayerLive do
         <%= for x <- cells_list(@player) do %>
           <div
            id={"cell-#{x}-#{y}"}
-           class={"square #{if Integer.is_even(x+y), do: "white", else: "black"}"}
+           class={"square #{if Integer.is_even(x+y), do: "white", else: "black"} #{if @cell_selected == {x,y}, do: "selected"}"}
            phx-click="click-cell"
            phx-value-x={x}
            phx-value-y={y}>
@@ -114,27 +115,17 @@ defmodule ChessWeb.PlayerLive do
   defp cell_content(position, nil), do: nil
 
   defp cell_content(position, state) do
-    case find_piece(position, state.white) do
-      {:found, piece} ->
-        {piece.type, :white}
-
-      :not_found ->
-        case find_piece(position, state.black) do
-          {:found, piece} -> {piece.type, :black}
-          :not_found -> nil
+    case Game.find_piece(position, state.white) do
+      nil ->
+        case Game.find_piece(position, state.black) do
+          nil -> nil
+          piece -> {piece.type, :black}
         end
+
+      piece ->
+        {piece.type, :white}
     end
   end
-
-  defp find_piece(position, [piece | rest]) do
-    if piece.position == position do
-      {:found, piece}
-    else
-      find_piece(position, rest)
-    end
-  end
-
-  defp find_piece(_position, []), do: :not_found
 
   defp set_turn(socket, state) do
     if socket.assigns.player == state.turn do

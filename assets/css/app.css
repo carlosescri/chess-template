@@ -22,6 +22,8 @@
   color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
+  position: fixed;
+  bottom: 0;
 }
 .alert p {
   margin-bottom: 0;
@@ -148,6 +150,10 @@
 
 .square.black {
   background-color: #d18b47;
+}
+
+.square.selected {
+  background-color: blue;
 }
 
 .figure {
