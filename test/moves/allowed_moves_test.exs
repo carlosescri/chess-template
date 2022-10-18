@@ -42,6 +42,18 @@ defmodule AllowedMovesTest do
     end
   end
 
+  describe "knight movements" do
+    test "knight in D4 has eight available moves" do
+      x = ["B3", "B5", "C2", "C6", "E2", "E6", "F3", "F5"]
+      assert x == Moves.allowed_moves("knight", "D4")
+    end
+
+    test "knight in B1 has very few options" do
+      x = ["A3", "C3", "D2"]
+      assert x == Moves.allowed_moves("knight", "B1")
+    end
+  end
+
   describe "queen movements" do
     test "queen in D4 can move in four diagonals and horizontally and vertically" do
       x = [

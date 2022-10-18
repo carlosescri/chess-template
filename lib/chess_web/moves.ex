@@ -2,13 +2,6 @@ defmodule ChessWeb.Moves do
   @letters ["A", "B", "C", "D", "E", "F", "G", "H"]
   @numbers ["1", "2", "3", "4", "5", "6", "7", "8"]
 
-  def binary2tuple(position) do
-    position
-    |> String.split("")
-    |> Enum.reject(&(&1 == ""))
-    |> List.to_tuple()
-  end
-
   def allowed_moves(piece, current_position) when is_binary(current_position) do
     allowed_moves(piece, binary2tuple(current_position))
   end
@@ -33,17 +26,15 @@ defmodule ChessWeb.Moves do
     |> Enum.sort()
   end
 
-  def allowed_moves("knight", {letter, number}) do
-    top_right_moves = top_right_diagonal([], {letter, number})
-    bottom_right_moves = []
-    bottom_left_moves = []
-    top_left_moves = []
-    []
-  end
-
   def allowed_moves("queen", position) do
     (allowed_moves("rook", position) ++ allowed_moves("bishop", position))
     |> Enum.dedup()
+    |> Enum.sort()
+  end
+
+  def allowed_moves("knight", position) do
+    knight_moves(position)
+    |> Enum.map(&tuple2str(&1))
     |> Enum.sort()
   end
 
@@ -95,6 +86,30 @@ defmodule ChessWeb.Moves do
     top_left_diagonal(moves, {deduct_letter(letter), increment_number(number)})
   end
 
+  def knight_moves({letter, number}) do
+    x_axis_one_move_right = increment_letter(letter)
+    x_axis_two_moves_right = letter |> increment_letter() |> increment_letter()
+    x_axis_one_move_left = deduct_letter(letter)
+    x_axis_two_moves_left = letter |> deduct_letter() |> deduct_letter()
+
+    y_axis_one_move_top = increment_number(number)
+    y_axis_two_moves_top = number |> increment_number() |> increment_number()
+    y_axis_one_move_bottom = deduct_number(number)
+    y_axis_two_moves_bottom = number |> deduct_number() |> deduct_number()
+
+    [
+      {x_axis_two_moves_right, y_axis_one_move_top},
+      {x_axis_two_moves_right, y_axis_one_move_bottom},
+      {x_axis_one_move_right, y_axis_two_moves_top},
+      {x_axis_one_move_right, y_axis_two_moves_bottom},
+      {x_axis_two_moves_left, y_axis_one_move_top},
+      {x_axis_two_moves_left, y_axis_one_move_bottom},
+      {x_axis_one_move_left, y_axis_two_moves_top},
+      {x_axis_one_move_left, y_axis_two_moves_bottom}
+    ]
+    |> Enum.filter(&valid_cell?(&1))
+  end
+
   def increment_letter("A"), do: "B"
   def increment_letter("B"), do: "C"
   def increment_letter("C"), do: "D"
@@ -102,6 +117,8 @@ defmodule ChessWeb.Moves do
   def increment_letter("E"), do: "F"
   def increment_letter("F"), do: "G"
   def increment_letter("G"), do: "H"
+  def increment_letter("H"), do: "I"
+  def increment_letter("I"), do: "J"
 
   def deduct_letter("H"), do: "G"
   def deduct_letter("G"), do: "F"
@@ -110,6 +127,8 @@ defmodule ChessWeb.Moves do
   def deduct_letter("D"), do: "C"
   def deduct_letter("C"), do: "B"
   def deduct_letter("B"), do: "A"
+  def deduct_letter("A"), do: "Z"
+  def deduct_letter("Z"), do: "Y"
 
   def increment_number("1"), do: "2"
   def increment_number("2"), do: "3"
@@ -118,6 +137,8 @@ defmodule ChessWeb.Moves do
   def increment_number("5"), do: "6"
   def increment_number("6"), do: "7"
   def increment_number("7"), do: "8"
+  def increment_number("8"), do: "9"
+  def increment_number("9"), do: "10"
 
   def deduct_number("8"), do: "7"
   def deduct_number("7"), do: "6"
@@ -126,6 +147,20 @@ defmodule ChessWeb.Moves do
   def deduct_number("4"), do: "3"
   def deduct_number("3"), do: "2"
   def deduct_number("2"), do: "1"
+  def deduct_number("1"), do: "0"
+  def deduct_number("0"), do: "-1"
 
-  def tuple2str(letter, number), do: "#{letter}#{number}"
+  defp valid_cell?({letter, number}) do
+    Enum.member?(@letters, letter) and Enum.member?(@numbers, number)
+  end
+
+  defp binary2tuple(position) do
+    position
+    |> String.split("")
+    |> Enum.reject(&(&1 == ""))
+    |> List.to_tuple()
+  end
+
+  defp tuple2str({letter, number}), do: "#{letter}#{number}"
+  defp tuple2str(letter, number), do: "#{letter}#{number}"
 end
