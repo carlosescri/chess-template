@@ -150,6 +150,10 @@
   background-color: #d18b47;
 }
 
+.square.selected {
+  background-color: grey;
+}
+
 .figure {
   position: relative;
   z-index: 0;

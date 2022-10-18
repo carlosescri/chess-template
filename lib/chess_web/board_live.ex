@@ -5,7 +5,8 @@ defmodule ChessWeb.BoardLive do
   {:ok,
   socket
   |> assign(:chess_game_topic_id, assigns.id)
-  |> assign(:pieces, assigns.pieces)}
+  |> assign(:pieces, assigns.pieces)
+  |> assign(:selected_square, assigns.selected_square)}
   end
 
   @impl Phoenix.LiveView
@@ -30,18 +31,23 @@ defmodule ChessWeb.BoardLive do
     )
   end
 
-  defp get_square_color(x, y) do
-    if rem(y, 2) == 0 do
-      if rem(x, 2) == 0 do
-        "black"
-      else
-        "white"
-      end
+  defp get_square_color(x, y, selected_square) do
+    # TODO: Fix this shit
+    if selected_square == x_y_into_chess_square(x, y) do
+      "selected"
     else
-      if rem(x, 2) == 0 do
-        "white"
+      if rem(y, 2) == 0 do
+        if rem(x, 2) == 0 do
+          "black"
+        else
+          "white"
+        end
       else
-        "black"
+        if rem(x, 2) == 0 do
+          "white"
+        else
+          "black"
+        end
       end
     end
   end

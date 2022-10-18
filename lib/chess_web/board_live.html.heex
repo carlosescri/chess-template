@@ -2,7 +2,7 @@
   <div class="board">
     <%= for y <- 8..1 do %>
       <%= for x <- 1..8 do %>
-        <div class={"square #{get_square_color(x, y)}"}>
+        <div class={"square #{get_square_color(x, y, @selected_square)}"} id={"#{x}#{y}"}>
           <%= if is_piece(x, y, @pieces) do %>
             <div class={"figure #{is_piece(x, y, @pieces)}"}
               phx-click="move_piece"
