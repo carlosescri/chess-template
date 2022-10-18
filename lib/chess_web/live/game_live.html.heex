@@ -1,0 +1,153 @@
+<section class="phx-hero">
+  <p>Peace of mind from prototype to production</p>
+
+  <form phx-change="suggest" phx-submit="search">
+    <input type="text" name="q" value={@query} placeholder="Live dependency search" list="results" autocomplete="off"/>
+    <datalist id="results">
+      <%= for {app, _vsn} <- @results do %>
+      <option value={app}><%= app %></option>
+      <% end %>
+    </datalist>
+    <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
+  </form>
+</section>
+
+<section>
+  <div class="board">
+    <div class="square white">
+      <div class="figure black rook"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black knight"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black bishop"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black queen"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black king"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black bishop"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black knight"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black rook"></div>
+    </div>
+
+    <div class="square black">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure black pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure black pawn"></div>
+    </div>
+
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+
+    <div class="square white">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white pawn"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white pawn"></div>
+    </div>
+
+    <div class="square black">
+      <div class="figure white rook"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white knight"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white bishop"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white queen"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white king"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white bishop"></div>
+    </div>
+    <div class="square black">
+      <div class="figure white knight"></div>
+    </div>
+    <div class="square white">
+      <div class="figure white rook"></div>
+    </div>
+  </div>
+</section>
