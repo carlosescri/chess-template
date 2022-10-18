@@ -64,7 +64,10 @@ defmodule Chess.Game.Board do
     valid_moves_list = Enum.map(valid_moves, fn {x,y} -> "(#{x},#{y})" end)
 
 
+
     {move_row, move_col} = {to_row - from_row, to_col - from_col}
+
+    # TODO: Comprobar el movimiento en el tablero y en la lista de valid_moves
 
 #    Enum.map(valid, &is_valid_movements(board, &1, from, to))
 
