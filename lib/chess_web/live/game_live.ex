@@ -7,7 +7,7 @@ defmodule ChessWeb.GameLive do
 
   require Integer
 
-  import ChessWeb.BoardHelpers
+  import ChessWeb.Board.Helpers
 
   alias Chess.Game
   alias Phoenix.LiveView.Socket
@@ -24,6 +24,6 @@ defmodule ChessWeb.GameLive do
 
   @spec assign_game_state(Socket.t(), binary) :: Socket.t()
   defp assign_game_state(socket, game_id) do
-    assign(socket, :game_state, IO.inspect(Game.state(game_id)))
+    assign(socket, :game_state, Game.state(game_id))
   end
 end
