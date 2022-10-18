@@ -11,7 +11,7 @@ defmodule ChessWeb.PageController do
     IO.puts("Start a new game.")
 
     # TODO: Start a new game
-    {:ok, join_code} = Chess.GamesSupervisor.start_game()
+    {:ok, join_code} = Chess.GamesSupervisor.start_game(user)
 
     redirect(put_session(conn, :username, user), to: "/games/#{join_code}")
   end

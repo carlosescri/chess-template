@@ -3,11 +3,7 @@ Welcome to <span>♟️</span> Chess ️
 Create or join a game.
 
 <%= form_for @conn, Routes.page_path(@conn, :new), [as: :data], fn f -> %>
-  <%= text_input f, :username %>
-  <%= text_input f, :join_code %>
-  <%= submit "Start" %>
+  <%= text_input f, :username, placeholder: "Name" %>
+  <%= text_input f, :join_code, placeholder: "Join code, leave empty to create a new game." %>
+  <%= submit "Join" %>
 <% end %>
-
-<div>
-  <button>Create a new game</button>
-</div>

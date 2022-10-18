@@ -2,24 +2,16 @@ defmodule Chess.Games do
   use GenServer
   require Logger
 
-  alias Chess.Game.Board
+  alias Chess.Games.Game
 
   @registry :game_registry
-  @initial_state %{
-    id: nil,
-    leader: nil,
-    players: MapSet.new(),
-    turn: :no_turn,
-    status: :waiting_for_players,
-    board: Board.default_board()
-  }
 
-  def start_link(name) do
-    GenServer.start_link(__MODULE__, name, name: via_tuple(name))
+  def start_link({user, game_id} = init_args) do
+    GenServer.start_link(__MODULE__, init_args, name: via_tuple(game_id))
   end
 
-  def log_state(process_name) do
-    process_name
+  def log_state(game_id) do
+    game_id
     |> via_tuple()
     |> GenServer.call(:log_state)
   end
@@ -36,22 +28,22 @@ defmodule Chess.Games do
     |> GenServer.call({:add_player, player_name, game_id})
   end
 
-  def get_current_players(process_name) do
-    process_name
+  def get_current_players(game_id) do
+    game_id
     |> via_tuple()
-    |> GenServer.call({:get_current_players})
+    |> GenServer.call(:get_current_players)
   end
 
   def get_board(game_id) do
     game_id
     |> via_tuple()
-    |> GenServer.call({:get_board})
+    |> GenServer.call(:get_board)
   end
 
   def move_figure(game_id, user, from, to) do
     game_id
     |> via_tuple()
-    |> GenServer.cast({:move_figure, game_id, user, from, to})
+    |> GenServer.cast({:move_figure, user, from, to})
   end
 
   def start_game(game_id) do
@@ -60,51 +52,50 @@ defmodule Chess.Games do
     |> GenServer.cast(:start_game)
   end
 
-  def child_spec(process_name) do
+  def child_spec({user, game_id}) do
     %{
       id: __MODULE__,
-      start: {__MODULE__, :start_link, [process_name]},
+      start: {__MODULE__, :start_link, [{user, game_id}]},
       restart: :transient
     }
   end
 
-  def stop(process_name, stop_reason) do
-    process_name
+  def stop(game_id, stop_reason) do
+    game_id
     |> via_tuple()
     |> GenServer.stop(stop_reason)
   end
 
 
   @impl true
-  def init(name) do
-    Logger.info("Starting process #{name}")
-    {:ok, Map.put(@initial_state, :id, name)}
+  def init({user, game_id}) do
+    Logger.info("Starting GenServer for game: #{game_id}")
+
+    {:ok, Game.new(game_id, user)}
   end
 
   @impl true
-  def handle_call(:log_state, _from, state) do
-    {:reply, "State: #{inspect(state)}", state}
+  def handle_call(:log_state, _from, game) do
+    {:reply, "State: #{inspect(game)}", game}
   end
 
-  def handle_call(:get_game, _from, state) do
-    {:reply, state, state}
+  def handle_call(:get_game, _from, game) do
+    {:reply, game, game}
   end
 
-  def handle_cast(:start_game, state) do
-    IO.puts("Starting the game...")
-    new_state =
-      state
-      |> Map.put(:status, :playing)
-      |> Map.put(:turn, :white)
+  def handle_cast(:start_game, game) do
+    new_game = Game.start(game)
 
-    broadcast(Map.get(state, :id), "start_game", new_state)
-    {:noreply, new_state}
+    broadcast(game.id, "start_game", new_game.status)
+    {:noreply, new_game}
   end
 
+
+  # TODO: Handle adding new player
   @impl true
-  def handle_call({:add_player, new_player, game_id}, _from, state) do
+  def handle_call({:add_player, new_player, game_id}, _from, game) do
     new_state =
-      Map.update!(state, :players, fn players -> MapSet.put(players, new_player) end)
+      Map.update!(game, :players, fn players -> MapSet.put(players, new_player) end)
 
     current_players =
       new_state
@@ -134,24 +125,22 @@ defmodule Chess.Games do
     {:reply, result, new_state}
   end
 
-  def handle_call({:get_current_players}, _from, state) do
-    {:reply, Map.get(state, :players), state}
+  def handle_call(:get_current_players, _from, game) do
+    {:reply, game.players, game}
   end
 
-  def handle_call({:get_board}, _from, state) do
-    board = Map.get(state, :board)
-    {:reply, board, state}
+  def handle_call(:get_board, _from, game) do
+    {:reply, game.board, game}
   end
 
-  def handle_cast({:move_figure, game_id, user, from, to}, state) do
-    board = Map.get(state, :board)
-    new_board = Board.move_figure(board, from, to)
-    broadcast(game_id, "update_board", new_board)
-    {:noreply, Map.put(state, :board, new_board)}
+  def handle_cast({:move_figure, user, from, to}, game) do
+    %{board: new_board} = new_game = Game.move_figure(game, user, from, to)
+    broadcast(game.id, "update_board", new_board)
+    {:noreply, new_game}
   end
 
-  defp via_tuple(name) do
-    {:via, Registry, {@registry, name}}
+  defp via_tuple(game_id) do
+    {:via, Registry, {@registry, game_id}}
   end
 
   def subscribe(game_id) do
