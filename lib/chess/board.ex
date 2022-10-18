@@ -15,19 +15,15 @@ defmodule Chess.Board do
     if selected_square == "#{y}#{x}" do
       "selected"
     else
-      if rem(y, 2) == 0 do
-        if rem(x, 2) == 0 do
-          "black"
-        else
-          "white"
-        end
-      else
-        if rem(x, 2) == 0 do
-          "white"
-        else
-          "black"
-        end
-      end
+      black_or_white(x, y)
+    end
+  end
+
+  defp black_or_white(x, y) do
+    if rem(y, 2) == rem(x, 2) do
+      "black"
+    else
+      "white"
     end
   end
 
