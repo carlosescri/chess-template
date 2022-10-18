@@ -5,14 +5,25 @@ defmodule ChessWeb.GameLive do
 
   use ChessWeb, :live_view
 
+  require Integer
+
+  import ChessWeb.BoardHelpers
+
+  alias Chess.Game
+  alias Phoenix.LiveView.Socket
+
   @impl Phoenix.LiveView
   def handle_params(%{"game_id" => game_id}, _uri, socket) do
-    IO.inspect(GenServer.call({:global, game_id}, :state))
-
-    {:noreply, socket}
+    {:noreply, assign_game_state(socket, game_id)}
   end
 
-  def get_tile_content(%{assigns: %{board: board}}, col, row) do
-    :ok
+  @spec square_color(non_neg_integer) :: binary
+  def square_color(idx) do
+    if Integer.is_even(idx + div(idx, 8)), do: "white", else: "black"
+  end
+
+  @spec assign_game_state(Socket.t(), binary) :: Socket.t()
+  defp assign_game_state(socket, game_id) do
+    assign(socket, :game_state, IO.inspect(Game.state(game_id)))
   end
 end

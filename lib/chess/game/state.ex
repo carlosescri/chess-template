@@ -11,7 +11,7 @@ defmodule Chess.Game.State do
   ]
 
   @type t :: %__MODULE__{
-          board: map,
+          board: list,
           white_player: binary,
           black_player: binary | nil,
           white_turn?: boolean

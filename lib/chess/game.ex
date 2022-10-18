@@ -34,6 +34,11 @@ defmodule Chess.Game do
     :ok
   end
 
+  @spec state(binary) :: State.t()
+  def state(game_id) do
+    GenServer.call({:global, game_id}, :state)
+  end
+
   @spec build_new_game_state(binary) :: State.t()
   defp build_new_game_state(player) do
     %State{
@@ -43,11 +48,9 @@ defmodule Chess.Game do
     }
   end
 
-  @spec build_new_board :: map
+  @spec build_new_board :: list
   defp build_new_board do
-    IO.puts("BUILD NEW BOARD")
-    row = %{a: nil, b: nil, c: nil, d: nil, e: nil, f: nil, g: nil}
-    Enum.reduce(1..8, %{}, fn col_idx, board -> Map.put(board, col_idx, row) end)
+    List.duplicate(nil, 64)
   end
 
   @spec generate_game_id :: binary
