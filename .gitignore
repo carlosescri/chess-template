@@ -32,3 +32,8 @@ chess-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Ignore log folder
+/log/
+
+.vscode/
+.idea
