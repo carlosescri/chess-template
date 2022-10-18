@@ -1,0 +1,94 @@
+<%= if @game do %>
+  <section>
+    <div class="board">
+      <%= for index <- 0..7 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 8..15 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 16..23 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 24..31 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 32..39 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 40..47 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 48..55 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_even(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+      <%= for index <- 56..63 do %>
+        <%= if is_player?(@game.players, self()) do %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"} phx-click="select_or_move" phx-value-position={index}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% else %>
+          <div class={"square #{if Integer.is_odd(index), do: "white", else: "black"}"}>
+            <div class={"#{Enum.at(@game.board, index) |> get_figure_class()}"}></div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
