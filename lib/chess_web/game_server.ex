@@ -26,11 +26,9 @@ defmodule ChessWeb.GameServer do
 
   #Server
   def handle_cast({:piece_moved, %{"old_square" => old_square, "new_square" => new_square}}, pieces) do
-    updated_pieces = Map.delete(pieces, old_square)
-    {:noreply, updated_pieces}
+    moved_piece = Map.get(pieces, old_square)
+    pieces2 = Map.delete(pieces, old_square)
+    pieces3 = Map.put(pieces2, new_square, moved_piece)
+    {:noreply, pieces3}
   end
-
 end
-
-# {:ok, pid} = ChessWeb.GameServer.start_link(nil)
-# ChessWeb.GameServer.get_pieces(pid)

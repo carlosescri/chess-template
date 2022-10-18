@@ -111,21 +111,19 @@ defmodule ChessWeb.GameLive do
       {y, _} = Integer.parse(y)
       square = x_y_into_chess_square(x, y)
       GameServer.move_piece(socket.assigns.pid, %{"old_square" => selected_square, "new_square" => square})
-      {:noreply, handle_piece_moved(socket, "bk", square)}
+      {:noreply, handle_piece_moved(socket, square)}
     end
 
-    defp handle_piece_moved(
+    def handle_piece_moved(
       %{assigns: %{pieces: pieces, selected_square: selected_square}} = socket,
-      piece,
       square
     ) do
       ChessWeb.Endpoint.broadcast(socket.assigns.chess_game_topic_id, "piece_moved", %{})
       socket
-      |> put_flash(:info, "Rating submitted successfully")
+      |> put_flash(:info, "Movement submitted successfully")
       |> assign(
       :pieces,
-      Map.delete(socket.assigns.pieces, selected_square)
+      Map.delete(socket.assigns.pieces, selected_square))
       |> assign(:selected_square, nil)
-      )
     end
 end
