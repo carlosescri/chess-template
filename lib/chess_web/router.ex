@@ -20,7 +20,7 @@ defmodule ChessWeb.Router do
     get "/", PageController, :index
 
     live_session :default do
-      live "/game", GameLive
+      live "/:game_name", GameLive
     end
   end
 

@@ -12,17 +12,17 @@ defmodule ChessWeb.GameLive do
 
     {:ok,
     socket
-    |> assign(:game_name, "test")
+    |> assign(:game_name, nil)
     |> assign(:chess_game_topic_id, "chess_game")}
   end
 
   @impl Phoenix.LiveView
-  def handle_params(_params, _uri, socket) do
-    IO.inspect(socket)
+  @spec handle_params(%{:game_name => binary()}, any, map) :: {:noreply, map}
+  def handle_params(%{"game_name" => game_name}, _uri, socket) do
     {
       :noreply,
       socket
-      |> assign(:game_name, "test")
+      |> assign(:game_name, game_name)
     }
   end
 
