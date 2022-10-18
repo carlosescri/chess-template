@@ -8,6 +8,8 @@ defmodule Chess.Game.Board do
   def move_figure(board, {from_row, from_col} = from, {to_row, to_col} = to) do
     figure = Map.get(board, from)
 
+    :ok = validate_move(board, figure, from, to)
+
     board
     |> Map.put(to, figure)
     |> Map.delete(from)
@@ -52,5 +54,42 @@ defmodule Chess.Game.Board do
       {7,6} => %Figure{type: :knight, color: :white},
       {7,7} => %Figure{type: :rook, color: :white}
     }
+  end
+
+  def validate_move(board, %Figure{type: :pawn, color: :white} = figure, from, to) do
+    {from_row, from_col} = from
+    {to_row, to_col} = to
+
+    valid_moves = get_figure_valid_moves(figure)
+    valid_moves_list = Enum.map(valid_moves, fn {x,y} -> "(#{x},#{y})" end)
+
+
+    {move_row, move_col} = {to_row - from_row, to_col - from_col}
+
+#    Enum.map(valid, &is_valid_movements(board, &1, from, to))
+
+    IO.puts("This figure can move to: #{IO.inspect(valid_moves_list)}")
+
+    IO.puts("Validate WHITE PAWN move from (#{from_row},#{from_col}) to (#{to_row},#{to_col})")
+
+    IO.puts("The move being checked is: (#{move_row},#{move_col})")
+
+    :ok
+  end
+
+  def validate_move(_, _, _, _) do
+    IO.puts("This figure has no validation yet")
+
+    :ok
+  end
+
+  def get_figure_valid_moves(%Figure{type: :pawn, color: :white}) do
+    [{-1, 0}, {-2, 0}, {-1, -1}, {-1, 1}]
+  end
+
+  def get_figure_valid_moves(_), do: []
+
+  def check_move_in_board(board, valid_moves) do
+
   end
 end

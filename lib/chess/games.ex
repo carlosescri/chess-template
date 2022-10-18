@@ -98,7 +98,7 @@ defmodule Chess.Games do
       |> Map.put(:turn, :white)
 
     broadcast(Map.get(state, :id), "start_game", new_state)
-    {:noreply, }
+    {:noreply, new_state}
   end
 
   @impl true
