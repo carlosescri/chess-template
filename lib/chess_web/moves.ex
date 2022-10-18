@@ -38,6 +38,11 @@ defmodule ChessWeb.Moves do
     |> Enum.sort()
   end
 
+  def allowed_moves("pawn", color, position) do
+    # si es blanco puede hacer +1 number
+    # si es negro puede hacer -1 number
+  end
+
   def top_right_diagonal(moves, position) when is_binary(position) do
     top_right_diagonal(moves, binary2tuple(position))
   end
@@ -107,7 +112,7 @@ defmodule ChessWeb.Moves do
       {x_axis_one_move_left, y_axis_two_moves_top},
       {x_axis_one_move_left, y_axis_two_moves_bottom}
     ]
-    |> Enum.filter(&valid_cell?(&1))
+    |> Enum.filter(&valid_square?(&1))
   end
 
   def increment_letter("A"), do: "B"
@@ -150,7 +155,7 @@ defmodule ChessWeb.Moves do
   def deduct_number("1"), do: "0"
   def deduct_number("0"), do: "-1"
 
-  defp valid_cell?({letter, number}) do
+  defp valid_square?({letter, number}) do
     Enum.member?(@letters, letter) and Enum.member?(@numbers, number)
   end
 

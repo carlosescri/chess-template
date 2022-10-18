@@ -1,23 +1,5 @@
 defmodule ChessWeb.Board do
-  use Agent
-
-  def start_link(initial_value) do
-    Agent.start_link(fn -> initial_value end, name: __MODULE__)
-  end
-
-  def get(position) do
-    Agent.get(__MODULE__, &Map.get(&1, position))
-  end
-
-  def empty?(position) do
-    get(position) == ""
-  end
-
-  def value() do
-    Agent.get(__MODULE__, & &1)
-  end
-
-  def default() do
+  def starting_board() do
     %{
       "A1" => "figure white rook",
       "A2" => "figure white pawn",
