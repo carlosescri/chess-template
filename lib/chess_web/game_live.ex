@@ -36,9 +36,10 @@ defmodule ChessWeb.GameLive do
   end
 
   def handle_info(%{event: "piece_moved", payload: %{"square" => square}}, socket) do
-    if socket.assigns.selected_square do
+    old_square = socket.assigns.selected_square
+    if old_square do
       pieces = Map.delete(socket.assigns.pieces, square)
-      GameServer.move_piece(socket.assigns.pid, square)
+      GameServer.move_piece(socket.assigns.pid, %{"old_square" => old_square, "new_square" => square})
       {:noreply,
         socket
         |> assign(:pieces, pieces)

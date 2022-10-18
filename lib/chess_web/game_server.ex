@@ -20,13 +20,13 @@ defmodule ChessWeb.GameServer do
   end
 
   #Client
-  def move_piece(pid, square) do
-    GenServer.cast(__MODULE__, {:piece_moved, square})
+  def move_piece(pid, %{"old_square" => old_square, "new_square" => new_square}) do
+    GenServer.cast(__MODULE__, {:piece_moved, old_square, new_square})
   end
 
   #Server
-  def handle_cast({:piece_moved, square}, pieces) do
-    updated_pieces = Map.delete(pieces, square)
+  def handle_cast({:piece_from, %{"old_square" => old_square, "new_square" => new_square}}, pieces) do
+    updated_pieces = Map.delete(pieces, old_square)
     {:noreply, updated_pieces}
   end
 

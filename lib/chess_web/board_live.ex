@@ -6,15 +6,33 @@ defmodule ChessWeb.BoardLive do
   socket
   |> assign(:chess_game_topic_id, assigns.id)
   |> assign(:pieces, assigns.pieces)
-  |> assign(:selected_square, assigns.selected_square)}
+  |> assign(:selected_square, nil)}
   end
 
   @impl Phoenix.LiveView
-  def handle_event("move_piece", %{"x" => x, "y" => y}, socket) do
+  def handle_event("move_piece_from", %{"x" => x, "y" => y}, socket) do
     {x, _} = Integer.parse(x)
     {y, _} = Integer.parse(y)
     square = x_y_into_chess_square(x, y)
-    {:noreply, handle_piece_moved(socket, "bk", square)}
+    selected_square = socket.assigns.selected_square
+    IO.inspect(square)
+    if square == selected_square do
+      selected_square == nil
+    end
+    {:noreply, assign(socket, :selected_square, square)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("move_piece_to", %{"x" => x, "y" => y}, socket) do
+    selected_square = socket.assigns.selected_square
+    if selected_square do
+      {x, _} = Integer.parse(x)
+      {y, _} = Integer.parse(y)
+      square = x_y_into_chess_square(x, y)
+      {:noreply, handle_piece_moved(socket, "bk", square)}
+    else
+      {:noreply, socket}
+    end
   end
 
   defp handle_piece_moved(
@@ -27,7 +45,7 @@ defmodule ChessWeb.BoardLive do
     |> put_flash(:info, "Rating submitted successfully")
     |> assign(
     :pieces,
-    Map.delete(socket.assigns.pieces, square)
+    Map.delete(socket.assigns.pieces, socket.assigns.selected_square)
     )
   end
 
