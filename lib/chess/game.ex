@@ -11,11 +11,7 @@ defmodule Chess.Game do
   """
   @spec new(binary) :: {:ok, pid} | {:error, :unable_to_start}
   def new(creator_name) do
-    children = [
-      {StateHandler, build_new_game_state(creator_name)}
-    ]
-
-    case Supervisor.start_link(children, strategy: :one_for_all) do
+    case GenServer.start(StateHandler, build_new_game_state(creator_name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -43,6 +39,7 @@ defmodule Chess.Game do
 
   @spec build_new_board :: map
   defp build_new_board do
+    IO.puts("BUILD NEW BOARD")
     row = %{a: nil, b: nil, c: nil, d: nil, e: nil, f: nil, g: nil}
     Enum.reduce(1..8, %{}, fn col_idx, board -> Map.put(board, col_idx, row) end)
   end

@@ -5,10 +5,13 @@ defmodule Chess.Game.StateHandler do
 
   use GenServer
 
-  alias Chess.Game.State
-
-  @spec init(State.t()) :: {:ok, State.t()}
+  @impl GenServer
   def init(state) do
     {:ok, state}
+  end
+
+  @impl GenServer
+  def handle_call(:state, _from, state) do
+    {:reply, state, state}
   end
 end
