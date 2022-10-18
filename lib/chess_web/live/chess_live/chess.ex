@@ -103,6 +103,9 @@ defmodule ChessWeb.Chess do
     end
   end
 
+  defp can_be_moved?(%{type: :pawn, color: color}, board, from, to) do
+  end
+
   defp can_be_moved?(piece, board, from, to) do
     true
   end
