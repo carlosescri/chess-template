@@ -1,0 +1,12 @@
+<%= if @connected do %>
+<section>
+  <span>Playing as: <%= @user %></span>
+  <button phx-click="move">
+    MOVE
+  </button>
+  <Components.board state={@board} />
+</section>
+<% else %>
+Loading...
+<% end %>
+

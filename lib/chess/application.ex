@@ -5,6 +5,8 @@ defmodule Chess.Application do
 
   use Application
 
+  @registry :game_registry
+
   @impl true
   def start(_type, _args) do
     children = [
@@ -13,9 +15,10 @@ defmodule Chess.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Chess.PubSub},
       # Start the Endpoint (http/https)
-      ChessWeb.Endpoint
+      ChessWeb.Endpoint,
       # Start a worker by calling: Chess.Worker.start_link(arg)
-      # {Chess.Worker, arg}
+      {Chess.GamesSupervisor, []},
+      {Registry, [keys: :unique, name: @registry]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

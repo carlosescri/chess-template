@@ -45,6 +45,9 @@ config :chess, ChessWeb.Endpoint,
 
 # Watch static and templates for browser reloading.
 config :chess, ChessWeb.Endpoint,
+  http: [ip: {0, 0, 0, 0}, port: 4000],
+  check_origin: false,
+  code_reloader: true,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
