@@ -1,0 +1,13 @@
+<section>
+  <div class="board">
+    <%= for y <- 8..1 do %>
+      <%= for x <- 1..8 do %>
+        <div class={"square #{get_square_color(x, y)}"}>
+          <%= if is_piece(x, y, @pieces) do %>
+            <div class={"figure #{is_piece(x, y, @pieces)}"}></div>
+          <% end %>  
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
