@@ -42,10 +42,10 @@ defmodule ChessWeb.MainLive do
   def handle_event("start_new_game", %{"new_game" => %{"hostname" => hostname}}, socket) do
     socket =
       case Game.new(hostname) do
-        {:ok, _game_id} ->
+        {:ok, game_id} ->
           socket
           |> put_flash(:info, "New game start")
-          |> push_redirect(to: Router.game_path(socket, :index, "holi"))
+          |> push_redirect(to: Router.game_path(socket, :index, game_id))
 
         _ ->
           put_flash(socket, :error, "Error: unable to start a new game. Try again later.")
