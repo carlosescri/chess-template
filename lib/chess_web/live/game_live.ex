@@ -3,7 +3,7 @@ defmodule ChessWeb.GameLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    {:ok, assign(socket, query: "", results: %{}, counter: 0)}
   end
 
   @impl true
@@ -23,6 +23,11 @@ defmodule ChessWeb.GameLive do
           |> put_flash(:error, "No dependencies found matching \"#{query}\"")
           |> assign(results: %{}, query: query)}
     end
+  end
+
+  @impl true
+  def handle_event("incr", _, socket) do
+    {:noreply, socket |> assign(counter: socket.assigns[:counter] + 1)}
   end
 
   defp search(query) do
