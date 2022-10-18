@@ -193,3 +193,17 @@
 .figure.rook {
   background-position-x: -182.5px;
 }
+
+.selected-cell {
+  background-color: #31708f !important;
+}
+
+.available_move {
+  position: fixed;
+  opacity: 0.9;
+  background-color: red !important;
+  z-index: 1;
+  border-radius: 8px;
+  /* height: 10px;
+  width: 10px; */
+}

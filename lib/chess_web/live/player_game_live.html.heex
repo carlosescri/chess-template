@@ -1,0 +1,40 @@
+<%= if @allow do %>
+	<section>
+		<div class="board">
+			<%= for row <- 1..8 do %>
+				<%= for column <- 1..8 do %>
+					<div class={"square #{square_color(row, column)} #{if @selected_cell == {row, column}, do: "selected-cell"}"} 
+					phx-click="select"
+					phx-value-row={row}
+					phx-value-column={column}
+					>
+					<%= if {row, column} in @available_moves do %>
+						<div class="available_move" >X</div>
+					<% end %>
+						<%= for figure <- get_figure(row, column, @game_state) do %>
+							<div class={"figure #{Atom.to_string(figure.player)} #{Atom.to_string(figure.type)}"} ></div>
+						<% end %>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+	</section>
+	<%= if @player == :white do %>
+		<h1>You move White </h1>
+	<% end %>
+	<%= if @player == :black do %>
+		<h1>You move Black </h1>
+	<% end %>
+	<%= if @player == :view_mode do %>
+		<h1>You are an spectator </h1>
+	<% end %>
+	<%= if @game_state.mode == :black_wins do %>
+		<h1>Blacks Wins</h1>
+	<% end %>
+	<%= if @game_state.mode == :white_wins do %>
+		<h1>White Wins</h1>
+	<% end %>
+<% else %>
+	<div>The game is full</div>
+<% end %>
+<h1><%= Enum.count(@game_state.spectators) %> Live viewers, <%= @game_state.turn %> Moves </h1>
