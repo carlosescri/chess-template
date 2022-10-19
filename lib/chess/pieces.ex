@@ -1,4 +1,11 @@
 defmodule Chess.Pieces do
+  @moduledoc """
+  This module contains constants about the name of the pieces and their
+  initial position.
+
+  This functions are used by the GameLive liveview.
+  """
+
   @king "king"
   @queen "queen"
   @rook "rook"
