@@ -64,3 +64,8 @@ The idea is that two players should be able to play a single game. You can make 
 8. Remember to push your code to your fork!!!
 
 **IMPORTANT:** No other dependencies than those listed in `mix.exs` are allowed. Any extra dependency must be approved by the jury.
+
+
+## TESTS
+
+    mix test test/chess/game_test.exs --trace
