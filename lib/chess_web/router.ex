@@ -24,7 +24,6 @@ defmodule ChessWeb.Router do
     pipe_through :browser
 
     live("/:game_name", ChessLive.Index, :play)
-    # get("/:game_name", ChessWeb.ChessLive.Index, :spectate)
   end
 
   # Other scopes may use custom stacks.
