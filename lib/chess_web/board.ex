@@ -1,4 +1,34 @@
 defmodule ChessWeb.Board do
+  def get_square_info(board, square) do
+    Map.get(board, square, "")
+  end
+
+  def highlight_square(board, square) do
+    unless empty_square?(board, square) do
+      IO.inspect(square, label: "highlighting square")
+
+      {_, updated} =
+        Map.get_and_update(board, square, fn value -> {value, value <> " highlighted"} end)
+
+      updated
+    end
+  end
+
+  def remove_highlight_from_square(board, square) do
+    IO.inspect(square, label: "removing highlight from square")
+
+    {_, updated} =
+      Map.get_and_update(board, square, fn value ->
+        {value, String.replace(value, "highlighted", "")}
+      end)
+
+    updated
+  end
+
+  def empty_square?(board, square) do
+    Map.get(board, square, "") == ""
+  end
+
   def starting_board() do
     %{
       "A1" => "figure white rook",

@@ -8,6 +8,8 @@ defmodule ChessWeb.GameAgent do
 
   def state(name), do: Agent.get(name, & &1)
 
+  def get_board(name), do: name |> state() |> Map.get(:board)
+
   def get_people_joined(name), do: name |> state() |> Map.get(:people_joined)
 
   def add_white_player(name, token) do
@@ -50,9 +52,5 @@ defmodule ChessWeb.GameAgent do
 
   def game_exists?(game) do
     state(game) == nil
-  end
-
-  def square_info(game, position) do
-    game |> state() |> get_in([:board, position])
   end
 end

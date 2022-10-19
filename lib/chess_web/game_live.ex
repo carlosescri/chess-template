@@ -28,7 +28,40 @@ defmodule ChessWeb.GameLive do
     {:noreply, put_flash(socket, :error, "Can't play as a viewer")}
   end
 
-  def handle_event("click:square", %{"square" => _square}, socket) do
+  def handle_event(
+        "click:square",
+        %{"square" => square},
+        %{assigns: %{first_square_clicked: nil}} = socket
+      ) do
+    IO.inspect(square, label: "click:square event | first click")
+
+    socket =
+      socket
+      |> highlight_clicked_square(square)
+      |> assign(:first_square_clicked, square)
+
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "click:square",
+        %{"square" => square},
+        %{assigns: %{first_square_clicked: first_square_clicked}} = socket
+      ) do
+    IO.inspect(square, label: "click:square event | second click")
+
+    socket =
+      socket
+      |> remove_highlight_from_square(first_square_clicked)
+      |> highlight_clicked_square(square)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("click:square", %{"square" => square}, socket) do
+    IO.inspect(square, label: "click:square event | fallback")
+    IO.inspect(socket.assigns.first_square_clicked)
+    # first_square_clicked
     # is first click or second click?
     {:noreply, socket}
   end
@@ -45,6 +78,16 @@ defmodule ChessWeb.GameLive do
     GameAgent.start_link(initial_state)
   end
 
+  defp remove_highlight_from_square(%{assigns: %{board: board}} = socket, square) do
+    IO.inspect(square, label: "remove highlight from square")
+    assign(socket, :board, Board.remove_highlight_from_square(board, square))
+  end
+
+  defp highlight_clicked_square(%{assigns: %{board: board}} = socket, square) do
+    IO.inspect(square, label: "highlight square")
+    assign(socket, :board, Board.highlight_square(board, square))
+  end
+
   defp join_game(socket, game, session) do
     socket = default_assigns(socket, game)
 
@@ -55,6 +98,7 @@ defmodule ChessWeb.GameLive do
         socket
         |> add_flash_message(who_joined)
         |> add_game_role(who_joined)
+        |> load_board()
       else
         socket
       end
@@ -66,6 +110,12 @@ defmodule ChessWeb.GameLive do
     socket
     |> assign(:game, game)
     |> assign_new(:role, fn -> nil end)
+    |> assign_new(:first_square_clicked, fn -> nil end)
+    |> assign_new(:board, fn -> %{} end)
+  end
+
+  defp load_board(socket) do
+    assign(socket, :board, GameAgent.get_board(socket.assigns.game))
   end
 
   defp add_game_role(socket, who_joined) when who_joined in [:white, :black, :viewer] do

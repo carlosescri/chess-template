@@ -170,6 +170,11 @@
   background-position-y: -48px;
 }
 
+.figure.highlighted {
+  background-color: green;
+  border-radius: 50px;
+}
+
 .figure.king {
   background-position-x: -3px;
 }
