@@ -34,10 +34,14 @@ defmodule ChessWeb.Board do
     updated
   end
 
+  def enemy_piece?(board, square, player_color) do
+    square_color(board, square) != player_color
+  end
+
   def move_piece(board, from, to) do
-    value = Map.get(board, from) |> IO.inspect()
-    piece = parse_piece(value) |> IO.inspect()
-    allowed_moves = Moves.allowed_moves(piece, from) |> IO.inspect()
+    value = Map.get(board, from)
+    piece = parse_piece(value)
+    allowed_moves = Moves.allowed_moves(piece, from)
 
     if Enum.member?(allowed_moves, to) do
       board

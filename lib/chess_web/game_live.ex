@@ -48,19 +48,25 @@ defmodule ChessWeb.GameLive do
   def handle_event(
         "click:square",
         %{"square" => square},
-        %{assigns: %{first_square_clicked: first_square_clicked, board: board}} = socket
+        %{assigns: %{first_square_clicked: first_square_clicked, board: board, role: role}} =
+          socket
       ) do
-    if get_player_color(socket) == Board.square_color(board, square) do
-      socket =
-        socket
-        |> remove_highlight_from_square(first_square_clicked)
-        |> highlight_clicked_square(square)
-        |> assign(:first_square_clicked, square)
+    cond do
+      get_player_color(socket) == Board.square_color(board, square) ->
+        socket =
+          socket
+          |> remove_highlight_from_square(first_square_clicked)
+          |> highlight_clicked_square(square)
+          |> assign(:first_square_clicked, square)
 
-      {:noreply, socket}
-    else
-      new_board = Board.move_piece(board, first_square_clicked, square)
-      {:noreply, assign(socket, :board, new_board)}
+        {:noreply, socket}
+
+      Board.enemy_piece?(board, square, role) ->
+        new_board = Board.move_piece(board, first_square_clicked, square)
+        {:noreply, assign(socket, :board, new_board)}
+
+      true ->
+        {:noreply, socket}
     end
   end
 

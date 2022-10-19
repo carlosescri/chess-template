@@ -38,9 +38,14 @@ defmodule ChessWeb.Moves do
     |> Enum.sort()
   end
 
-  def allowed_moves("pawn", color, position) do
-    # si es blanco puede hacer +1 number
-    # si es negro puede hacer -1 number
+  def allowed_moves("pawn", _position) do
+    # pawn movements are not implemented yet
+    []
+  end
+
+  def allowed_moves("king", _position) do
+    # king movements are not implemented yet
+    []
   end
 
   def top_right_diagonal(moves, position) when is_binary(position) do
