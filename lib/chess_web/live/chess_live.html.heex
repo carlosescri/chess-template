@@ -1,0 +1,198 @@
+<section>
+<div> White player <%= @white %> </div> <div> Black player <%= @black %> </div>
+<div> <%= if not is_nil(@won), do: "Gana #{@won}" %> </div>
+  <div class="board">
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a1} phx-value-square={:a1} >
+       1 <div class={@board.a1} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b1} phx-value-square={:b1} >
+      <div class={@board.b1} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c1} phx-value-square={:c1} >
+      <div class={@board.c1} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d1} phx-value-square={:d1} >
+      <div class={@board.d1} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e1} phx-value-square={:e1} >
+      <div class={@board.e1} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f1} phx-value-square={:f1} >
+      <div class={@board.f1} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g1} phx-value-square={:g1} >
+      <div class={@board.g1} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h1} phx-value-square={:h1} >
+      <div class={@board.h1} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a2} phx-value-square={:a2} >
+      2<div class={@board.a2} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b2} phx-value-square={:b2} >
+      <div class={@board.b2} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c2} phx-value-square={:c2} >
+      <div class={@board.c2} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d2} phx-value-square={:d2} >
+      <div class={@board.d2} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e2} phx-value-square={:e2} >
+      <div class={@board.e2} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f2} phx-value-square={:f2} >
+      <div class={@board.f2} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g2} phx-value-square={:g2} >
+      <div class={@board.g2} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h2} phx-value-square={:h2} >
+      <div class={@board.h2} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a3} phx-value-square={:a3} >
+     3 <div class={@board.a3} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b3} phx-value-square={:b3} >
+      <div class={@board.b3} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c3} phx-value-square={:c3} >
+      <div class={@board.c3} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d3} phx-value-square={:d3} >
+      <div class={@board.d3} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e3} phx-value-square={:e3} >
+      <div class={@board.e3} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f3} phx-value-square={:f3} >
+      <div class={@board.f3} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g3} phx-value-square={:g3} >
+      <div class={@board.g3} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h3} phx-value-square={:h3} >
+      <div class={@board.h3} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a4} phx-value-square={:a4} >
+     4 <div class={@board.a4} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b4} phx-value-square={:b4} >
+      <div class={@board.b4} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c4} phx-value-square={:c4} >
+      <div class={@board.c4} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d4} phx-value-square={:d4} >
+      <div class={@board.d4} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e4} phx-value-square={:e4} >
+      <div class={@board.e4} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f4} phx-value-square={:f4} >
+      <div class={@board.f4} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g4} phx-value-square={:g4} >
+      <div class={@board.g4} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h4} phx-value-square={:h4} >
+      <div class={@board.h4} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a5} phx-value-square={:a5} >
+     5 <div class={@board.a5} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b5} phx-value-square={:b5} >
+      <div class={@board.b5} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c5} phx-value-square={:c5} >
+      <div class={@board.c5} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d5} phx-value-square={:d5} >
+      <div class={@board.d5} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e5} phx-value-square={:e5} >
+      <div class={@board.e5} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f5} phx-value-square={:f5} >
+      <div class={@board.f5} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g5} phx-value-square={:g5} >
+      <div class={@board.g5} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h5} phx-value-square={:h5} >
+      <div class={@board.h5} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a6} phx-value-square={:a6} >
+    6  <div class={@board.a6} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b6} phx-value-square={:b6} >
+      <div class={@board.b6} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c6} phx-value-square={:c6} >
+      <div class={@board.c6} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d6} phx-value-square={:d6} >
+      <div class={@board.d6} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e6} phx-value-square={:e6} >
+      <div class={@board.e6} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f6} phx-value-square={:f6} >
+      <div class={@board.f6} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g6} phx-value-square={:g6} >
+      <div class={@board.g6} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h6} phx-value-square={:h6} >
+      <div class={@board.h6} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a7} phx-value-square={:a7} >
+     7 <div class={@board.a7} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b7} phx-value-square={:b7} >
+      <div class={@board.b7} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c7} phx-value-square={:c7} >
+      <div class={@board.c7} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d7} phx-value-square={:d7} >
+      <div class={@board.d7} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e7} phx-value-square={:e7} >
+      <div class={@board.e7} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f7} phx-value-square={:f7} >
+      <div class={@board.f7} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g7} phx-value-square={:g7} >
+      <div class={@board.g7} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h7} phx-value-square={:h7} >
+      <div class={@board.h7} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.a8} phx-value-square={:a8} >
+     8 a<div class={@board.a8} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.b8} phx-value-square={:b8} >
+      b<div class={@board.b8} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.c8} phx-value-square={:c8} >
+      c<div class={@board.c8} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.d8} phx-value-square={:d8} >
+      d<div class={@board.d8} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.e8} phx-value-square={:e8} >
+      e<div class={@board.e8} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.f8} phx-value-square={:f8} >
+      f<div class={@board.f8} ></div>
+    </div>
+    <div class="square black" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.g8} phx-value-square={:g8} >
+      g<div class={@board.g8} ></div>
+    </div>
+    <div class="square white" phx-click="move_select" phx-value-selected_square={@selected_square} phx-value-selected_figure={@selected_figure} phx-value-figure={@board.h8} phx-value-square={:h8} >
+      h<div class={@board.h8} ></div>
+    </div>
+  </div>
+</section>
