@@ -1,0 +1,156 @@
+<section class="container">
+  <span>GAME: <%= @game_name %></span>
+  <table>
+      <th><span>Score Whites:</span></th>
+      <th></th>
+      <th><span >Score Blacks:</span></th>
+      <th><span >Now Moving:</span></th>
+      <th><span >Movement:</span></th>
+      <tr>
+        <td><%= @score_whites %></td>
+        <td></td>
+        <td><%= @score_blacks %></td>
+        <td><%= @turn %></td>
+        <td><span><%= @piece %></span>&nbsp;&nbsp;<span><%=@square%></span></td>
+      </tr>
+  </table>
+  </section>
+  <section>
+    <div class="board">
+      <div class="square white" phx-click="square_click" phx-value-square="A8">
+        <div class="figure black rook" phx-click="black_click" phx-value-piece="rook-b1"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="B8">
+        <div class="figure black knight" phx-click="black_click" phx-value-piece="knight-b1"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="C8">
+        <div class="figure black bishop" phx-click="black_click" phx-value-piece="bishop-b1"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="D8">
+        <div class="figure black queen" phx-click="black_click" phx-value-piece="queen-black"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="E8">
+        <div class="figure black king" phx-click="black_click" phx-value-piece="king-black"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="F8">
+        <div class="figure black bishop" phx-click="black_click" phx-value-piece="bishop-b2"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="G8">
+        <div class="figure black knight" phx-click="black_click" phx-value-piece="knight-b2"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="H8">
+        <div class="figure black rook" phx-click="black_click" phx-value-piece="rook-b2"></div>
+      </div>
+  
+      <div class="square black" phx-click="square_click" phx-value-square="A7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b1"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="B7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b2"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="C7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b3"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="D7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b4"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="E7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b5"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="F7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b6"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="G7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b7"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="H7">
+        <div class="figure black pawn" phx-click="black_click" phx-value-piece="pawn-b8"></div>
+      </div>
+  
+      <div class="square white" phx-click="square_click" phx-value-square="A6"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="B6"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="C6"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="D6"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="E6"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="F6"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="G6"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="H6"></div>
+  
+      <div class="square black" phx-click="square_click" phx-value-square="A5"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="B5"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="C5"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="D5"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="E5"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="F5"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="G5"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="H5"></div>
+  
+      <div class="square white" phx-click="square_click" phx-value-square="A4"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="B4"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="C4"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="D4"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="E4"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="F4"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="G4"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="H4"></div>
+  
+      <div class="square black" phx-click="square_click" phx-value-square="A3"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="B3"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="C3"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="D3"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="E3"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="F3"></div>
+      <div class="square black" phx-click="square_click" phx-value-square="G3"></div>
+      <div class="square white" phx-click="square_click" phx-value-square="H3"></div>
+  
+      <div class="square white" phx-click="square_click" phx-value-square="A2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w1"></div>
+      </div>
+      <div class="square black" phx-click="square_click"  phx-value-square="B2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w2"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="C2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w3"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="D2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w4"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="E2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w5"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="F2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w6"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="G2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w7"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="H2">
+        <div class="figure white pawn" phx-click="white_click" phx-value-piece="pawn-w8"></div>
+      </div>
+  
+      <div class="square black" phx-click="square_click" phx-value-square="A1">
+        <div class="figure white rook" phx-click="white_click" phx-value-piece="rook-b1"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="B1">
+        <div class="figure white knight" phx-click="white_click" phx-value-piece="knight-b1"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="C1">
+        <div class="figure white bishop" phx-click="white_click" phx-value-piece="bishop-b1"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="D1">
+        <div class="figure white queen" phx-click="white_click" phx-value-piece="queen-white"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="E1">
+        <div class="figure white king" phx-click="white_click" phx-value-piece="king-white"></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="F1">
+        <div class="figure white bishop" phx-click="white_click" phx-value-piece="bishop-w2"></div>
+      </div>
+      <div class="square black" phx-click="square_click" phx-value-square="G1">
+        <div class="figure white knight" phx-click="white_click" phx-value-piece="knight-w2" ></div>
+      </div>
+      <div class="square white" phx-click="square_click" phx-value-square="H1">
+        <div class="figure white rook" phx-click="white_click" phx-value-piece="rook-w2"></div>
+      </div>
+    </div>
+  </section>
