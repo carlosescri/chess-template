@@ -3,17 +3,27 @@ defmodule ChessWeb.GameLive do
 
   alias Chess.Gameplay.Game
   alias Chess.Gameplay.Position
+  alias Chess.Utils.Converter
+  alias ChessWeb.GameplayServer
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket) do
-      :timer.send_interval(1000, self(), :tick)
-    end
+    socket =
+      assign(socket, state: Game.initial(), selected_pos: nil)
+      |> assign_current_time()
+      |> assign(black_time: 5 * 60)
+      |> assign(white_time: 5 * 60)
 
-    {:ok, assign(socket, state: Game.initial(), selected_pos: nil) |> assign_current_time()}
+    {:ok,
+      if connected?(socket) do
+        {:ok, pid} = GenServer.start_link(GameplayServer, {self(), socket.assigns.state})
+
+        assign(socket, pid: pid)
+      else
+        socket
+      end
+    }
   end
-
-  @impl true
 
   @impl true
   def handle_event("select_sq", %{"pos" => pos}, socket) do
@@ -30,8 +40,7 @@ defmodule ChessWeb.GameLive do
               {:noreply, socket |> assign(selected_pos: pos)}
 
             from_p ->
-              with {:ok, state} <-
-                     Game.move(socket.assigns.state, from_p, pos) do
+              with {:ok, state} <- GenServer.call(socket.assigns.pid, {:move, from_p, pos}) do
                 {:noreply, assign(socket, state: state, selected_pos: nil)}
               else
                 {:error, msg} ->
@@ -45,15 +54,17 @@ defmodule ChessWeb.GameLive do
   end
 
   @impl true
-  def handle_event("incr", _, socket) do
-    {:noreply, socket |> assign(counter: socket.assigns[:counter] + 1)}
+  def handle_cast({:new_state, state}, socket) do
+    {:noreply, socket |> assign(state: state)}
   end
 
   @impl true
-  def handle_info(:tick, socket) do
-    socket = assign_current_time(socket)
+  def handle_cast({:new_time, time}, socket) do
+    {:noreply, socket |> assign_current_time |> assign_player_time(time)}
+  end
 
-    {:noreply, socket}
+  def assign_player_time(socket, %{white: white_time, black: black_time}) do
+    socket |> assign(white_time: white_time) |> assign(black_time: black_time)
   end
 
   def assign_current_time(socket) do
@@ -64,6 +75,10 @@ defmodule ChessWeb.GameLive do
       |> hd
 
     assign(socket, now: now)
+  end
+
+  def seconds_to_str(sec) do
+    Converter.sec_to_str(sec)
   end
 
   def get_classes(selected_pos, col, row) do
@@ -107,6 +122,7 @@ defmodule ChessWeb.GameLive do
     end
   end
 
+  def outcome(%{outcome: :out_of_time, turn: turn}), do: "#{turn} lost, ran out of time!"
   def outcome(%{outcome: :checkmate, turn: turn}), do: "#{turn} lost, checkmate!"
   def outcome(%{outcome: :stalemate}), do: "Tie by stalemate!"
   def outcome(_), do: nil

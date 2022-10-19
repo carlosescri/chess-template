@@ -35,10 +35,13 @@ defmodule Chess.Gameplay.Game do
 
   def checkmate?(state), do: checked?(state) and no_moves_available?(state)
 
-  def stalemate?(state), do: no_moves_available?(state)
+  def stalemate?(state), do: no_moves_available?(state) and !checked?(state)
 
+  ###########
+  # PRIVATE #
+  ###########
 
-  def no_moves_available?(state) do
+  defp no_moves_available?(state) do
     state.board
     |> Board.find(%{colour: state.turn})
     |> Enum.any?(fn {pos, _} ->
@@ -46,10 +49,6 @@ defmodule Chess.Gameplay.Game do
     end)
     |> negate
   end
-
-  ###########
-  # PRIVATE #
-  ###########
 
   defp exec_move(game_state, from_pos, to_pos) do
     with {:ok, _} <- game_state |> valid_move?(from_pos, to_pos) do
