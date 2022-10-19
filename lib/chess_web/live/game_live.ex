@@ -68,6 +68,11 @@ defmodule ChessWeb.GameLive do
   end
 
   @spec player_figure?(State.t(), Figure.t()) :: boolean
-  defp player_figure?(%{turn: color}, %{color: color}), do: true
-  defp player_figure?(_, _), do: false
+  defp player_figure?(%{game_state: state}, %{color: color}) do
+    if color == :white do
+      state in [:play_white, :play_white_check]
+    else
+      state in [:play_black, :play_black_check]
+    end
+  end
 end

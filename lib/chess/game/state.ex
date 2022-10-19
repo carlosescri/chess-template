@@ -3,19 +3,25 @@ defmodule Chess.Game.State do
   Defines the struct that models a game state.
   """
 
-  alias Chess.Game.Figure
-
   defstruct [
     :board,
     :white_player,
     :black_player,
-    :turn
+    game_state: :play_white
   ]
 
-  @type t :: %__MODULE__{
+  @type game_state() ::
+          :play_white
+          | :play_white_check
+          | :white_wins
+          | :black_wins
+          | :play_black
+          | :play_black_check
+
+  @type t() :: %__MODULE__{
           board: list,
           white_player: binary,
           black_player: binary | nil,
-          turn: Figure.color()
+          game_state: game_state()
         }
 end

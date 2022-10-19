@@ -1,5 +1,4 @@
 defmodule Chess.Game.Helpers do
-
   @doc """
   Transforms a list index into coordinates
   """
@@ -10,5 +9,5 @@ defmodule Chess.Game.Helpers do
   Transforms a coordinate tuple into a list index
   """
   @spec to_index({non_neg_integer, non_neg_integer}) :: non_neg_integer
-  def to_index({col, row}), do: col*8 + row
+  def to_index({col, row}), do: col * 8 + row
 end
