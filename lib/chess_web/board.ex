@@ -11,6 +11,8 @@ defmodule ChessWeb.Board do
         Map.get_and_update(board, square, fn value -> {value, value <> " highlighted"} end)
 
       updated
+    else
+      board
     end
   end
 
