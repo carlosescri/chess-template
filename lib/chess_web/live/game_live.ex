@@ -69,7 +69,9 @@ defmodule ChessWeb.GameLive do
   end
 
   def assign_player_time(socket, %{white: white_time, black: black_time}) do
-    socket |> assign(white_time: white_time) |> assign(black_time: black_time)
+    socket
+    |> assign(white_time: white_time)
+    |> assign(black_time: black_time)
   end
 
   def assign_current_time(socket) do
@@ -106,25 +108,29 @@ defmodule ChessWeb.GameLive do
   def piece_render(nil), do: nil
 
   def piece_render(%{type: piece, colour: :white}) do
-    case piece do
-      :bishop -> "figure white bishop"
-      :king -> "figure white king"
-      :knight -> "figure white knight"
-      :pawn -> "figure white pawn"
-      :queen -> "figure white queen"
-      :rook -> "figure white rook"
+    figure =
+      case piece do
+        :bishop -> "bishop"
+        :king -> "king"
+        :knight -> "knight"
+        :pawn -> "pawn"
+        :queen -> "queen"
+        :rook -> "rook"
     end
+    "figure white #{figure}"
   end
 
   def piece_render(%{type: piece, colour: :black}) do
-    case piece do
-      :bishop -> "figure black bishop"
-      :king -> "figure black king"
-      :knight -> "figure black knight"
-      :pawn -> "figure black pawn"
-      :queen -> "figure black queen"
-      :rook -> "figure black rook"
+    figure =
+      case piece do
+        :bishop -> "bishop"
+        :king -> "king"
+        :knight -> "knight"
+        :pawn -> "pawn"
+        :queen -> "queen"
+        :rook -> "rook"
     end
+    "figure black #{figure}"
   end
 
   def outcome(%{outcome: :out_of_time, turn: turn}), do: "#{turn} lost, ran out of time!"
