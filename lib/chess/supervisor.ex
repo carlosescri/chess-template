@@ -1,7 +1,7 @@
 defmodule Chess.GamesSupervisor do
   use DynamicSupervisor
-  alias Chess.Games
-  alias Chess.Games.Game
+  alias Chess.GameServer
+  alias Chess.Game
 
   def start_link(_arg) do
     DynamicSupervisor.start_link(__MODULE__, [], name: __MODULE__)
@@ -15,9 +15,8 @@ defmodule Chess.GamesSupervisor do
     {:ok, join_code}
   end
 
-
   def start_child(user, game_id) do
-    DynamicSupervisor.start_child(__MODULE__, {Games, {user, game_id}})
+    DynamicSupervisor.start_child(__MODULE__, {GameServer, {user, game_id}})
   end
 
   @impl true

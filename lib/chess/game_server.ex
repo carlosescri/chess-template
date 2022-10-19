@@ -1,8 +1,9 @@
-defmodule Chess.Games do
+defmodule Chess.GameServer do
   use GenServer
+
   require Logger
 
-  alias Chess.Games.Game
+  alias Chess.Game
 
   @registry :game_registry
 
@@ -20,6 +21,12 @@ defmodule Chess.Games do
     game_id
     |> via_tuple()
     |> GenServer.call(:get_game)
+  end
+
+  def connect(game_id, player_name) do
+    game_id
+    |> via_tuple()
+    |> GenServer.call({:connect, player_name})
   end
 
   def add_player(game_id, player_name) do
@@ -66,7 +73,6 @@ defmodule Chess.Games do
     |> GenServer.stop(stop_reason)
   end
 
-
   @impl true
   def init({user, game_id}) do
     Logger.info("Starting GenServer for game: #{game_id}")
@@ -86,43 +92,21 @@ defmodule Chess.Games do
   def handle_cast(:start_game, game) do
     new_game = Game.start(game)
 
-    broadcast(game.id, "start_game", new_game.status)
+    broadcast(game.id, "start_game", new_game)
     {:noreply, new_game}
   end
 
+  def handle_call({:connect, player}, _from, game) do
+    new_game =
+      case {MapSet.size(game.players), MapSet.member?(game.players, player)} do
+        {0, _} -> %Game{game | players: MapSet.put(game.players, player)}
+        {1, false} -> %Game{game | players: MapSet.put(game.players, player), status: :ready}
+        {1, true} -> game
+        {_, _} -> %Game{game | viewers: MapSet.put(game.viewers, player)}
+      end
 
-  # TODO: Handle adding new player
-  @impl true
-  def handle_call({:add_player, new_player, game_id}, _from, game) do
-    new_state =
-      Map.update!(game, :players, fn players -> MapSet.put(players, new_player) end)
-
-    current_players =
-      new_state
-      |> Map.get(:players)
-      |> MapSet.size()
-
-    result = case current_players do
-      1 -> :player_added_leader
-      2 -> :player_added
-      _ -> :viewer_added
-    end
-
-    new_state = case result do
-      :player_added_leader ->
-        Map.put(new_state, :leader, new_player)
-      :player_added ->
-        if Map.get(new_state, :status) == :waiting_for_players do
-          Map.put(new_state, :status, :ready)
-        else
-          new_state
-        end
-      _ -> new_state
-    end
-
-    broadcast(game_id, "player_connected", new_state)
-
-    {:reply, result, new_state}
+    broadcast(game.id, "player_connected", new_game)
+    {:reply, new_game, new_game}
   end
 
   def handle_call(:get_current_players, _from, game) do
@@ -134,9 +118,14 @@ defmodule Chess.Games do
   end
 
   def handle_cast({:move_figure, user, from, to}, game) do
-    %{board: new_board} = new_game = Game.move_figure(game, user, from, to)
-    broadcast(game.id, "update_board", new_board)
-    {:noreply, new_game}
+    case Game.move_figure(game, user, from, to) do
+      {:ok, new_game} ->
+        broadcast(game.id, "update_board", new_game)
+        {:noreply, new_game}
+      {:error, reason} ->
+        Logger.error(reason)
+        {:noreply, game}
+    end
   end
 
   defp via_tuple(game_id) do
@@ -148,6 +137,6 @@ defmodule Chess.Games do
   end
 
   defp broadcast(game_id, event, data) do
-    Phoenix.PubSub.broadcast(Chess.PubSub,"game:#{game_id}", {event, data})
+    Phoenix.PubSub.broadcast(Chess.PubSub, "game:#{game_id}", {event, data})
   end
 end

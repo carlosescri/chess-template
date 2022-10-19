@@ -18,7 +18,6 @@ defmodule ChessWeb.Components do
 
   def get_color(_, _), do: "black"
 
-
   def get_figure(board, row, col) do
     Board.get_at(board, row, col)
   end

@@ -5,8 +5,6 @@ defmodule ChessWeb.PageController do
     render(conn, "index.html")
   end
 
-
-
   def new(conn, %{"data" => %{"username" => user, "join_code" => ""}}) do
     IO.puts("Start a new game.")
 
@@ -21,5 +19,4 @@ defmodule ChessWeb.PageController do
 
     redirect(put_session(conn, :username, user), to: "/games/#{join_code}")
   end
-
 end

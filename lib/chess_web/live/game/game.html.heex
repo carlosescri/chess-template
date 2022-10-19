@@ -2,18 +2,20 @@
 <section>
   <span>Playing as: <b><%= @user %></b> on game: <b><%= @game_id %></b>. Share this code to your friends to play against them.</span>
 
-  <%= if show_start_button(@is_leader, @status) do %>
+  <%= if show_start_button(@game_mode, @game.status) do %>
     <button phx-click="start_game">START GAME</button>
   <% end %>
 
-  <p>Status: <%= @status %></p>
+  <p>Status: <%= @game.status %></p>
+  <%= if @game_mode != :viewer do %>
+  <p>You play as: <b><%= @figures %></b></p>
+  <% end %>
 
-  <%= if @status == :playing do %>
-    <p>Turn: <%= @turn %></p>
-    <p>Playing as: <%= @figures %></p>
+  <%= if @game.status == :playing do %>
+    <p>Turn: <%= @game.turn %></p>
   <% end %>
   <p>Connected players: <%= @players %></p>
-  <Components.board state={@board} />
+  <Components.board state={@game.board} />
 </section>
 <% else %>
 Loading...
