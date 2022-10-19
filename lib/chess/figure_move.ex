@@ -37,6 +37,11 @@ defmodule Chess.FigureMove do
     move_x_y(x, y)
   end
 
+  def move(%{"cor" => cor, "player" => player, "figure" => "bishop"}) do
+    [x, y] = String.codepoints(cor)
+    diagonal_move(x, y)
+  end
+
   def kill?(%{"cor" => cor, "player" => player} = params, coordinate, active_player, _move, {_color, "pawn"}) do
     [column_kill, row_kill] = String.codepoints(cor)
     row_kill = String.to_integer(row_kill)
@@ -82,5 +87,10 @@ defmodule Chess.FigureMove do
     move_in_y = Enum.map(move_in_y, fn move -> x <> "#{move}" end)
 
     move_in_x ++ move_in_y
+  end
+
+  defp diagonal_move(x, y) do
+    # aqui va la logica en diagonal del alfil
+
   end
 end
