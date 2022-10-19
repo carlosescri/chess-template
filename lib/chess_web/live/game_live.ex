@@ -18,8 +18,6 @@ defmodule ChessWeb.GameLive do
              state: %SettingStruct{board: state.board},
              info: "CLICK A FIGURE!"
            )}
-
-        IO.inspect(ready, label: "socket")
         ready
 
       {:error, _msg} ->
@@ -48,7 +46,7 @@ defmodule ChessWeb.GameLive do
     cell = {String.to_integer(row), String.to_integer(column)}
     state = %{socket.assigns.state | first_cell_selected: cell}
 
-    {:noreply, assign(socket, state: state, info: "CLICK CELL: #{row}, #{column}!")}
+    {:noreply, assign(socket, state: state, info: "CLICK CELL: {#{row}, #{column}}")}
   end
 
   def handle_event("cell_selected", _params, socket), do: {:noreply, socket}
