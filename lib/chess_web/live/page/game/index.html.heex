@@ -1,0 +1,11 @@
+<section>
+  <div> Player <%= @player %></div>
+  <div class="board">
+    <%= for coordinate <- @coordinates do %>
+      <SquareLiveComponent.square
+        id={coordinate}
+        square={Map.get(@board, coordinate)}
+      />
+    <% end %>
+  </div>
+</section>
