@@ -5,6 +5,11 @@ defmodule ChessWeb.Board do
     Map.get(board, square, "")
   end
 
+  @spec square_color(map, binary) :: atom
+  def square_color(board, square) do
+    board |> get_square_info(square) |> get_piece_color()
+  end
+
   def highlight_square(board, square) do
     unless empty_square?(board, square) do
       {_, updated} =
@@ -112,5 +117,13 @@ defmodule ChessWeb.Board do
     |> Enum.reject(&Enum.member?(to_reject, &1))
     |> Enum.uniq()
     |> List.first("")
+  end
+
+  defp get_piece_color(value) do
+    cond do
+      String.contains?(value, "white") -> :white
+      String.contains?(value, "black") -> :black
+      true -> :empty
+    end
   end
 end
