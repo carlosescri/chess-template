@@ -9,7 +9,7 @@ defmodule Chess.Gameplay.Pawn do
     colour = (board |> Board.piece({c, r})).colour
 
     regular_moves(board, colour, {c, r}) ++
-    attacks(board, colour, {c, r}, List.last(previous_moves))
+    attacks(board, colour, {c, r}, previous_moves |> List.last())
   end
 
   ###########

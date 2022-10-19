@@ -1,160 +1,24 @@
 <section class="phx-hero">
-  <p>Peace of mind from prototype to production</p>
-
-  <form phx-change="suggest" phx-submit="search">
-    <input type="text" name="q" value={@query} placeholder="Live dependency search" list="results" autocomplete="off"/>
-    <datalist id="results">
-      <%= for {app, _vsn} <- @results do %>
-      <option value={app}><%= app %></option>
-      <% end %>
-    </datalist>
-    <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
-  </form>
-</section>
-
-<section class="row">
-  <article class="column">
-    <button type="button" phx-click="incr"><%= @counter %>++</button>
-    <h2><%= @now %></h2>
-  </article>
-</section>
-
-<section>
+  <h3>Chess</h3>
+  <p><%= @now %></p>
   <div class="board">
-    <div class="square white">
-      <div class="figure black rook"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black knight"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black bishop"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black queen"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black king"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black bishop"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black knight"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black rook"></div>
-    </div>
+    <%= for row <- 7..0 do %>
+      <%= for col <- 0..7 do %>
+        <div
+          class={get_classes(@selected_pos, col, row)}
+          phx-click="select_sq"
+          phx-value-pos={pos_to_s({col, row})}
+        >
 
-    <div class="square black">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure black pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure black pawn"></div>
-    </div>
-
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-    <div class="square black"></div>
-    <div class="square white"></div>
-
-    <div class="square white">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white pawn"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white pawn"></div>
-    </div>
-
-    <div class="square black">
-      <div class="figure white rook"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white knight"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white bishop"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white queen"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white king"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white bishop"></div>
-    </div>
-    <div class="square black">
-      <div class="figure white knight"></div>
-    </div>
-    <div class="square white">
-      <div class="figure white rook"></div>
-    </div>
+          <div class={piece_render(@state.board[{col, row}])}></div>
+        </div>
+      <% end %>
+    <% end %>
   </div>
+
+  <h3>Turn: <%= @state.turn %></h3>
+  <h4>Captures:</h4>
+    <%= for c <- @state.captured_pieces do %>
+      <p><%= piece_render(c) %></p>
+    <% end %>
 </section>

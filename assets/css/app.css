@@ -135,6 +135,10 @@
   grid-template-rows: repeat(8, var(--square-size));
 }
 
+.board .selected {
+  border: 3px dotted #1b1851;
+}
+
 .square {
   display: flex;
   justify-content: center;

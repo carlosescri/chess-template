@@ -1,31 +1,46 @@
 defmodule ChessWeb.GameLive do
   use ChessWeb, :live_view
 
+  alias Chess.Gameplay.Game
+  alias Chess.Gameplay.Position
+
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
       :timer.send_interval(1000, self(), :tick)
     end
 
-    {:ok, assign(socket, query: "", results: %{}, counter: 0) |> assign_current_time()}
+    {:ok, assign(socket, state: Game.initial(), selected_pos: nil) |> assign_current_time()}
   end
 
   @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
-  end
 
   @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
+  def handle_event("select_sq", %{"pos" => pos}, socket) do
+    with {:ok, pos} <- Position.parse(pos) do
+      case socket.assigns.selected_pos do
+        ^pos ->
+          {:noreply,
+            socket
+            |> assign(selected_pos: nil)}
 
-      _ ->
-        {:noreply,
-          socket
-          |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-          |> assign(results: %{}, query: query)}
+        _ ->
+          case socket.assigns.selected_pos do
+            nil ->
+              {:noreply, socket |> assign(selected_pos: pos)}
+
+            from_p ->
+              with {:ok, state} <-
+                     Game.move(socket.assigns.state, from_p, pos) do
+                {:noreply, assign(socket, state: state, selected_pos: nil)}
+              else
+                {:error, msg} ->
+                  {:noreply, socket |> put_flash(:error, msg)}
+              end
+          end
+      end
+    else
+      {:error, msg} -> {:noreply, socket |> put_flash(:error, msg)}
     end
   end
 
@@ -51,15 +66,47 @@ defmodule ChessWeb.GameLive do
     assign(socket, now: now)
   end
 
-  defp search(query) do
-    if not ChessWeb.Endpoint.config(:code_reloader) do
-      raise "action disabled when not in development"
-    end
+  def get_classes(selected_pos, col, row) do
+    colour =
+      case rem(row + col, 2) do
+        0 -> :black
+        1 -> :white
+      end
+    selected =
+      case selected_pos == {col, row} do
+        true -> "selected"
+        _ -> ""
+      end
+    "square #{colour} #{selected}"
+  end
 
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
+  def pos_to_s({c, r}) do
+    Integer.to_string(c) <> "," <> Integer.to_string(r)
+  end
+
+  def pos_to_s(nil), do: nil
+
+  def piece_render(nil), do: nil
+
+  def piece_render(%{type: piece, colour: :white}) do
+    case piece do
+      :pawn -> "figure white pawn"
+      :knight -> "figure white knight"
+      :bishop -> "figure white bishop"
+      :rook -> "figure white rook"
+      :queen -> "figure white queen"
+      :king -> "figure white king"
+    end
+  end
+
+  def piece_render(%{type: piece, colour: :black}) do
+    case piece do
+      :pawn -> "figure black pawn"
+      :knight -> "figure black knight"
+      :bishop -> "figure black bishop"
+      :rook -> "figure black rook"
+      :queen -> "figure black queen"
+      :king -> "figure black king"
+    end
   end
 end
