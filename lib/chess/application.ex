@@ -11,7 +11,7 @@ defmodule Chess.Application do
       # Start the Telemetry supervisor
       ChessWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Chess.PubSub},
+      {Phoenix.PubSub, name: :chess_pubsub},
       # Start the Endpoint (http/https)
       ChessWeb.Endpoint
       # Start a worker by calling: Chess.Worker.start_link(arg)

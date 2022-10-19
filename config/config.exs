@@ -11,7 +11,7 @@ import Config
 config :chess, ChessWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: ChessWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Chess.PubSub,
+  pubsub_server: :chess_pubsub,
   live_view: [signing_salt: "wBUdubgi"]
 
 # Configure esbuild (the version is required)

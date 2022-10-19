@@ -7,7 +7,9 @@ defmodule ChessWeb.ChessLive.Index do
 
   use ChessWeb, :live_view
 
+  alias Chess.Game
   alias ChessWeb.Chess
+  alias Phoenix.PubSub
   alias Phoenix.LiveView.Socket
 
   @impl Phoenix.LiveView
@@ -19,9 +21,9 @@ defmodule ChessWeb.ChessLive.Index do
   def handle_params(%{"game_name" => name}, url, %{assigns: %{game: nil}} = socket) do
     if connected?(socket) do
       name = String.to_atom(name)
-
+      
       {:ok, pid} =
-        case process = GenServer.whereis(name) do
+        case GenServer.whereis(name) do
           nil ->
             GenServer.start_link(Chess, {name, self()}, name: name)
 
@@ -33,7 +35,7 @@ defmodule ChessWeb.ChessLive.Index do
 
       game = GenServer.call(pid, :get_game)
 
-      Process.send_after(self(), :update_game, 1000)
+      PubSub.subscribe(:chess_pubsub, "game_update")
 
       {:noreply, socket |> assign(gen_pid: pid) |> assign(:game, game)}
     else
@@ -41,20 +43,21 @@ defmodule ChessWeb.ChessLive.Index do
     end
   end
 
-  @impl Phoenix.LiveView
-  def handle_info(:update_game, %{assigns: %{gen_pid: pid}} = socket) do
-    game = GenServer.call(pid, :get_game)
-    Process.send_after(self(), :update_game, 1000)
-    {:noreply, assign(socket, game: game)}
+  def handle_info(%Game{} = game, socket) do
+    {:noreply, assign(socket, :game, game)}
   end
 
   @impl Phoenix.LiveView
   def handle_event(
         "select_or_move",
         %{"position" => index},
-        %{assigns: %{selected_piece_index: nil}} = socket
+        %{assigns: %{selected_piece_index: nil, game: game}} = socket
       ) do
-    {:noreply, assign(socket, :selected_piece_index, String.to_integer(index))}
+    if can_move?(game) and is_selecting_piece?(game.board, index) do
+      {:noreply, assign(socket, :selected_piece_index, String.to_integer(index))}
+    else
+      {:noreply, socket}
+    end
   end
 
   def handle_event(
@@ -77,5 +80,13 @@ defmodule ChessWeb.ChessLive.Index do
 
   defp is_player?({%{pid: player1_pid}, %{pid: player2_pid}}, pid) do
     player1_pid == pid or player2_pid == pid
+  end
+
+  defp can_move?(%{turn: :white, players: {%{pid: player_1_pid}, _}}), do: self() == player_1_pid
+  defp can_move?(%{turn: :black, players: {_, %{pid: player_2_pid}}}), do: self() == player_2_pid
+  defp can_move?(_), do: false
+
+  defp is_selecting_piece?(board, index) do
+    board |> Enum.at(String.to_integer(index)) |> is_nil() == false
   end
 end
