@@ -1,0 +1,31 @@
+<header>
+  <div class="top"><%= @info %></div>
+  <div class="top">Room: <%= @game_name %>. You: player1 </div>
+  <div class="bottom">
+    <%= if @settings.ready do %>
+      <div class="over_messages">
+        <img src={Routes.static_path(@socket, "/images/waiting.gif")}>
+        <span>Waiting for the enemy move...</span>
+      </div>
+    <% end %>
+  </div>
+</header>
+
+<div class = "game panel">
+    <div class="col-8">
+      <%= render("board.html", mode: :playing, players: @players, settings: @settings, player: :you)%>
+    </div>
+    <div class = "col-4">History:</div>
+</div>
+
+<%= if @mode == :game_over do %>
+  <%= if @state.winner == :you do %>
+  <div class="over_messages">
+    <span>JACKEMATE! <br><br> YOU'RE THE WINNER!</span>
+  </div>
+  <% else %>
+  <div class="over_messages">
+    <span>JACKEMATE! <br><br> YOU LOST!</span>
+  </div>
+  <% end %>
+<% end %>

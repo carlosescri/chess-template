@@ -93,6 +93,7 @@ defmodule ChessWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import ChessWeb.DrawHelpers
       import ChessWeb.ErrorHelpers
       alias ChessWeb.Router.Helpers, as: Routes
     end

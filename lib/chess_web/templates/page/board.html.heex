@@ -1,0 +1,13 @@
+<section>
+  <div class="board">
+    <%= for row <- 0..7 do %>
+      <%= for column <- 0..7 do %>
+        <div class={"square #{color_class({row, column})} #{cell_selected?(@settings, {row, column})}"}
+          phx-click="cell_selected" phx-value-row={row} phx-value-column={column} phx-value-player={@player}}>
+            <div class={draw_piece_your_piece(@players, {row, column})}></div>
+            <div class={draw_piece_enemy_piece(@players, {row, column})}></div>   
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>

@@ -150,6 +150,10 @@
   background-color: #d18b47;
 }
 
+.selected {
+  background-color: #887665 !important;
+}
+
 .figure {
   position: relative;
   z-index: 0;
