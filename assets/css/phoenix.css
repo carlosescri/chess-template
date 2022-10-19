@@ -79,3 +79,53 @@ header nav a {
     margin: 1rem;
   }
 }
+
+/* INFO */
+
+.info_game {
+  text-align: center;
+  background-color: #2ecc71;
+  background-clip: padding-box;
+  border-radius: 6px;
+  padding: 1vmin;
+  border: 5vmin solid transparent;
+}
+
+.setting + .info_game {
+  margin-top: 5vmin;
+}
+
+.info_game span {
+  color: white;
+  font-family: 'Helvetica';
+  font-weight: bold;
+  font-size: 4vmin;
+}
+
+/* INDEX AND NOT ALLOWED*/
+
+.generic {
+  height: 100%;
+  display: flex;
+  margin: auto;
+}
+
+.generic .info .header {
+  padding: 3vmin;
+  font-family: 'Helvetica';
+  color: black;
+  font-size: 6.5vmin;
+  text-align: center;
+}
+
+.generic .info .description {
+  font-family: 'Helvetica';
+  color: black;
+  font-size: 3vmin;
+}
+
+.generic .info .description span {
+  font-family: 'Helvetica';
+  color: black;
+  font-size: 3vmin;
+}
