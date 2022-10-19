@@ -28,7 +28,12 @@ defmodule ChessWeb.Components do
     "#{color} #{type}"
   end
 
-  def is_selectable(figure) do
-    if is_nil(figure), do: "", else: "selectable"
-  end
+  def is_selectable(nil), do: ""
+  def is_selectable(_), do: "selectable"
+
+  def is_selected({selected_row, selected_col}, row, col) when selected_row == row and selected_col == col, do: true
+  def is_selected(_, _, _), do: false
+
+  def get_selected(true), do: "selected"
+  def get_selected(false), do: ""
 end

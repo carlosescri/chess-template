@@ -47,29 +47,21 @@ defmodule Chess.Game do
       )
       when user == leader and turn == :white
       when user != leader and turn == :black do
-    %Figure{color: color} = Map.get(current_board, from)
-
-    if color == turn do
-      case Board.move_figure(current_board, from, to) do
-        {:error, reason} ->
-          {:error, reason}
-
-        {:ok, board} ->
-          {
-            :ok,
-            %__MODULE__{
-              game
-              | board: board,
-                turn: next_turn(turn)
-            }
-          }
-      end
-    else
+    with %Figure{color: color} <- Map.get(current_board, from),
+         true <- color == turn,
+         {:ok, board} <- Board.move_figure(current_board, from, to) do
       {
-        :error,
-        "Trying to move other player figures!"
+        :ok,
+        %__MODULE__{
+          game
+          | board: board,
+            turn: next_turn(turn)
+        }
       }
-    end
+  else
+    {:error, reason} -> {:error, reason}
+    _ -> {:error, "Trying to move other player figures!"}
+   end
   end
 
   def move_figure(game, user, _, _) do

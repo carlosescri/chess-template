@@ -2,6 +2,6 @@
         phx-click="click_square"
         phx-value-row={@row}
         phx-value-col={@col}
-        class={"square #{get_color(@row, @col)} #{is_selectable(@figure)}"}>
+        class={"square #{get_color(@row, @col)} #{is_selectable(@figure)} #{get_selected(@selected)}"}>
 <%= render_slot(@inner_block) %>
 </div>

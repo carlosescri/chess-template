@@ -68,16 +68,8 @@ defmodule Chess.Game.Board do
     {to_row, to_col} = to
 
     valid_moves = Figure.valid_moves(figure)
-    valid_moves_list = Enum.map(valid_moves, fn {x, y} -> "(#{x},#{y})" end)
-
-    current_move = {move_row, move_col} = {to_row - from_row, to_col - from_col}
-    # TODO: Comprobar el movimiento en el tablero y en la lista de valid_moves
-
+    current_move = {to_row - from_row, to_col - from_col}
     is_legal? = current_move in valid_moves
-    IO.puts("Moving a '#{}' figure.")
-    IO.puts("This figure can move to: #{IO.inspect(valid_moves_list)}")
-    IO.puts("Validate move from (#{from_row},#{from_col}) to (#{to_row},#{to_col})")
-    IO.puts("The move being checked is: (#{move_row},#{move_col})")
 
     case {is_legal?, Map.get(board, to, nil)} do
       {false, _} -> :error
