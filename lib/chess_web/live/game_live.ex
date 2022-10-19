@@ -55,12 +55,17 @@ defmodule ChessWeb.GameLive do
 
   @impl true
   def handle_cast({:new_state, state}, socket) do
-    {:noreply, socket |> assign(state: state)}
+    {:noreply, assign(socket, state: state)}
   end
 
   @impl true
   def handle_cast({:new_time, time}, socket) do
-    {:noreply, socket |> assign_current_time |> assign_player_time(time)}
+    {
+      :noreply,
+      socket
+      |> assign_current_time
+      |> assign_player_time(time)
+    }
   end
 
   def assign_player_time(socket, %{white: white_time, black: black_time}) do
@@ -102,23 +107,23 @@ defmodule ChessWeb.GameLive do
 
   def piece_render(%{type: piece, colour: :white}) do
     case piece do
-      :pawn -> "figure white pawn"
-      :knight -> "figure white knight"
       :bishop -> "figure white bishop"
-      :rook -> "figure white rook"
-      :queen -> "figure white queen"
       :king -> "figure white king"
+      :knight -> "figure white knight"
+      :pawn -> "figure white pawn"
+      :queen -> "figure white queen"
+      :rook -> "figure white rook"
     end
   end
 
   def piece_render(%{type: piece, colour: :black}) do
     case piece do
-      :pawn -> "figure black pawn"
-      :knight -> "figure black knight"
       :bishop -> "figure black bishop"
-      :rook -> "figure black rook"
-      :queen -> "figure black queen"
       :king -> "figure black king"
+      :knight -> "figure black knight"
+      :pawn -> "figure black pawn"
+      :queen -> "figure black queen"
+      :rook -> "figure black rook"
     end
   end
 

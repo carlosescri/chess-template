@@ -31,7 +31,7 @@
   <div class="btm-section">
     <h4>Captures:</h4>
       <%= for captured <- @state.captured_pieces do %>
-        <p><div class={piece_render(captured)}></div></p>
+        <div class={piece_render(captured)}></div>
       <% end %>
   </div>
 
