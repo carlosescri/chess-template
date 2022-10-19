@@ -1,0 +1,13 @@
+<section>
+  <div class="board">
+    <%= for {tile, idx} <- Enum.with_index(@game_state.board) do %>
+      <div
+        class={"square #{square_color(idx)} #{movement_cue(@selected_tile, tile, @game_state)} #{if selected?(tile, @selected_tile), do: "selected"}"}
+        phx-click="select_tile"
+        phx-value-index={idx}
+        >
+        <%= tile_content(tile) %>
+      </div>
+    <% end %>
+  </div>
+</section>
