@@ -193,3 +193,16 @@
 .figure.rook {
   background-position-x: -182.5px;
 }
+
+.figure.focus {
+  background-color: #35a046;
+  border-radius: 100px;
+}
+
+.emptyfocus.focus {
+  display: block;
+  background-color: #35a046;
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+}

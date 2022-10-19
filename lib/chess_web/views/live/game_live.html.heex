@@ -1,0 +1,11 @@
+
+<%= if @checkmate do %>
+  <h2>Game ended, Winner: <%= @winner %> </h2>
+<% end %>
+
+<p> You are: <%= @role %> <%= if @role == :player , do: @player, else: ""%></p>
+<p>Turn of: <%= @turn_of %> </p>
+
+<BoardComponent.draw id="gameboard" board={@board} focus={@focus} movements={@movements}/>
+
+

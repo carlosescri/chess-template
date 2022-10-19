@@ -1,4 +1,4 @@
-<section>
+<section hidden>
   <div class="board">
     <div class="square white">
       <div class="figure black rook"></div>
@@ -137,3 +137,7 @@
     </div>
   </div>
 </section>
+
+<%= form_for :whatever, Routes.page_path(@conn, :new_game), fn _f -> %>
+  <%= submit "New Game" %>
+<% end %>
