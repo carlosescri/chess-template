@@ -15,6 +15,7 @@ defmodule ChessWeb.PlayerLive do
      |> assign(cell_selected: nil)}
   end
 
+  @impl Phoenix.LiveView
   def handle_params(_params, _uri, socket) do
     GameServer.start_link(socket.assigns.game_name)
 
@@ -36,11 +37,8 @@ defmodule ChessWeb.PlayerLive do
     end
   end
 
-  def handle_event(
-        "click-cell",
-        %{"x" => x, "y" => y},
-        socket
-      )
+  @impl Phoenix.LiveView
+  def handle_event("click-cell", _params, socket)
       when socket.assigns.state.turn != socket.assigns.player do
     {:noreply, socket}
   end
@@ -71,6 +69,7 @@ defmodule ChessWeb.PlayerLive do
     {:noreply, assign(socket, cell_selected: nil)}
   end
 
+  @impl Phoenix.LiveView
   def handle_info({:opponent_moved, new_state}, socket) do
     {:noreply,
      socket
@@ -78,20 +77,18 @@ defmodule ChessWeb.PlayerLive do
      |> assign(state: new_state)}
   end
 
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <section>
       <div class="board">
       <%= for y <- cells_list(@player) do %>
         <%= for x <- cells_list(@player) do %>
-          <div
-           id={"cell-#{x}-#{y}"}
-           class={"square #{if Integer.is_even(x+y), do: "white", else: "black"} #{if @cell_selected == {x,y}, do: "selected"}"}
-           phx-click="click-cell"
-           phx-value-x={x}
-           phx-value-y={y}>
-            <.cell content={cell_content({x,y}, @state)} />
-          </div>
+          <.cell x={x}
+                 y={y}
+                 content={cell_content({x,y}, @state)}
+                 selected={@cell_selected == {x,y}}
+                 color={if Integer.is_even(x+y), do: "white", else: "black"}/>
         <% end %>
       <% end %>
       </div>
@@ -99,33 +96,35 @@ defmodule ChessWeb.PlayerLive do
     """
   end
 
-  defp cell(%{content: {piece, player}} = assigns) do
+  defp cell(assigns) do
     ~H"""
-      <div class={"figure #{player} #{piece}"}></div>
+      <div id={"cell-#{@x}-#{@y}"}
+           class={"square #{@color} #{if @selected, do: "selected"}"}
+           phx-click="click-cell"
+           phx-value-x={@x}
+           phx-value-y={@y}>
+        <%= if @content do %>
+          <div class={"figure #{@content.player} #{@content.piece}"}></div>
+        <% end %>
+      </div>
     """
   end
-
-  defp cell(assigns),
-    do: ~H"""
-    """
 
   defp cells_list(:white), do: 7..0
   defp cells_list(:black), do: 0..7
 
-  defp cell_content(position, nil), do: nil
+  defp cell_content(_position, nil), do: nil
 
-  defp cell_content(position, state) do
-    case Game.find_piece(position, state.white) do
-      nil ->
-        case Game.find_piece(position, state.black) do
-          nil -> nil
-          piece -> {piece.type, :black}
-        end
+  defp cell_content(position, state), do: find_pieces(position, state, [:white, :black])
 
-      piece ->
-        {piece.type, :white}
+  defp find_pieces(position, state, [player | rest]) do
+    case Game.find_piece(position, Map.get(state, player)) do
+      nil -> find_pieces(position, state, rest)
+      piece -> %{player: player, piece: piece.type}
     end
   end
+
+  defp find_pieces(_position, _state, []), do: nil
 
   defp set_turn(socket, state) do
     if socket.assigns.player == state.turn do
@@ -137,8 +136,11 @@ defmodule ChessWeb.PlayerLive do
 
   defp move(socket, piece, position) do
     case GameServer.move(socket.assigns.game_name, {piece, position}) do
-      {:ok, state} -> socket |> set_turn(state) |> assign(state: state)
-      {:error, msg} -> put_flash(socket, :error, msg)
+      {:ok, state} ->
+        socket |> set_turn(state) |> assign(state: state)
+
+      {:error, "illegal movement"} ->
+        put_flash(socket, :error, "Your piece can't move that way. Try again.")
     end
   end
 end

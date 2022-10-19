@@ -1,15 +1,12 @@
 defmodule Chess.Game do
+  alias Chess.Game.State
   alias Chess.Game.Piece
-
-  defmodule State do
-    defstruct white: [], black: [], turn: :white
-  end
 
   def new() do
     %State{
       white: [
-        %Piece{type: :king, position: {4, 0}},
-        %Piece{type: :queen, position: {3, 0}},
+        %Piece{type: :king, position: {3, 0}},
+        %Piece{type: :queen, position: {4, 0}},
         %Piece{type: :bishop, position: {2, 0}},
         %Piece{type: :bishop, position: {5, 0}},
         %Piece{type: :knight, position: {1, 0}},
@@ -26,8 +23,8 @@ defmodule Chess.Game do
         %Piece{type: :pawn, position: {7, 1}}
       ],
       black: [
-        %Piece{type: :king, position: {4, 7}},
-        %Piece{type: :queen, position: {3, 7}},
+        %Piece{type: :king, position: {3, 7}},
+        %Piece{type: :queen, position: {4, 7}},
         %Piece{type: :bishop, position: {2, 7}},
         %Piece{type: :bishop, position: {5, 7}},
         %Piece{type: :knight, position: {1, 7}},
@@ -46,13 +43,8 @@ defmodule Chess.Game do
     }
   end
 
-  def move(state, movement, player) do
-    if legal?(state, movement, player) do
-      {:ok, apply_movement(state, movement, player)}
-    else
-      {:error, "illegal movement"}
-    end
-  end
+  def get_all_pieces(%State{white: white_pieces, black: black_pieces}),
+    do: white_pieces ++ black_pieces
 
   def find_piece(position, [piece | rest]) do
     if piece.position == position do
@@ -63,6 +55,14 @@ defmodule Chess.Game do
   end
 
   def find_piece(_position, []), do: nil
+
+  def move(state, movement, player) do
+    if legal_move?(state, movement, player) do
+      {:ok, apply_movement(state, movement, player)}
+    else
+      {:error, "illegal movement"}
+    end
+  end
 
   defp apply_movement(state, {piece, {x, y}}, player) do
     player_updated_pieces =
@@ -83,9 +83,9 @@ defmodule Chess.Game do
     |> Map.put(:turn, opponent(player))
   end
 
-  defp legal?(state, {piece, {x, y}}, player) do
-    not out_of_table?(x, y) and
-      Piece.legal?({x, y}, piece)
+  defp legal_move?(state, {piece, {x, y}}, _player) do
+    not out_of_table?(x, y) and Piece.legal_move?({x, y}, piece) and
+      State.legal_move?({x, y}, piece.position, state)
   end
 
   defp out_of_table?(x, y), do: x < 0 or x > 7 or y < 0 or y > 7
