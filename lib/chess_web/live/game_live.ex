@@ -57,17 +57,8 @@ defmodule ChessWeb.GameLive do
   end
 
   @impl true
-  def handle_cast({:new_time, time}, socket) do
-    {
-      :noreply,
-      assign_player_time(socket, time)
-    }
-  end
-
-  def assign_player_time(socket, %{white: white_time, black: black_time}) do
-    socket
-    |> assign(white_time: white_time)
-    |> assign(black_time: black_time)
+  def handle_cast(_, socket) do
+    {:noreply, socket}
   end
 
   def assign_current_time(socket) do
@@ -129,7 +120,6 @@ defmodule ChessWeb.GameLive do
     "figure black #{figure}"
   end
 
-  def outcome(%{outcome: :out_of_time, turn: turn}), do: "#{turn} lost, ran out of time!"
   def outcome(%{outcome: :checkmate, turn: turn}), do: "#{turn} lost, checkmate!"
   def outcome(%{outcome: :stalemate}), do: "Tie by stalemate!"
   def outcome(_), do: nil

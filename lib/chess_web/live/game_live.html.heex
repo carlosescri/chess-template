@@ -1,12 +1,6 @@
 <section>
   <div class="hd-section-left">
     <h3>Game</h3>
-    <p>
-      White:
-      <%= if @white_time != 0 do seconds_to_str(@white_time) else "out of time" end %>
-      || Black:
-      <%= if @black_time != 0 do seconds_to_str(@black_time) else "out of time" end %>
-    </p>
   </div>
   <div class="hd-section-right">
     <h3>Turn: <%= @state.turn %></h3>
