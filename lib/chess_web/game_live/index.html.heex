@@ -1,0 +1,11 @@
+<section>
+  <div class="board">
+    <%= for square <- @squares do %>
+    <div phx-click={square.id} class={"square #{if square.white, do: "white", else: "black"}"}>
+    <%= if square.chesspiece_id do %>
+      <div class={"figure #{Board.get_piece_data(@pieces, square.chesspiece_id)}"}></div>
+    <% end %>
+    </div>
+    <% end %>
+  </div>
+</section>

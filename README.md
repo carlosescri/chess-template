@@ -64,3 +64,29 @@ The idea is that two players should be able to play a single game. You can make 
 8. Remember to push your code to your fork!!!
 
 **IMPORTANT:** No other dependencies than those listed in `mix.exs` are allowed. Any extra dependency must be approved by the jury.
+
+## Diagrams
+
+```mermaid
+classDiagram
+    Game "1" --> "1..2" Player
+    Game "1" --> "1" Board
+    Board "1" --> "64" Square
+    Player "1" --> "16" ChessPiece
+    Square "1" --> "0..1" ChessPiece
+    class Player{
+        -int id
+        -bool white
+    }
+    class ChessPiece{
+        -int id
+        -bool white
+        -str type
+    }
+    class Square{
+        -int id
+        -bool white
+        -int chesspiece_id
+        -coordinates
+    }
+```
