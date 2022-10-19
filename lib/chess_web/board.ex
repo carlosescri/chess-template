@@ -7,8 +7,6 @@ defmodule ChessWeb.Board do
 
   def highlight_square(board, square) do
     unless empty_square?(board, square) do
-      IO.inspect(square, label: "highlighting square")
-
       {_, updated} =
         Map.get_and_update(board, square, fn value -> {value, value <> " highlighted"} end)
 
@@ -17,14 +15,19 @@ defmodule ChessWeb.Board do
   end
 
   def remove_highlight_from_square(board, square) do
-    IO.inspect(square, label: "removing highlight from square")
-
     {_, updated} =
       Map.get_and_update(board, square, fn value ->
         {value, String.replace(value, "highlighted", "")}
       end)
 
     updated
+  end
+
+  def move_piece(board, from, to) do
+    value = Map.get(board, from)
+    piece = parse_piece(value)
+    allowed_moves = Moves.allowed_moves(piece, from)
+    board
   end
 
   def empty_square?(board, square) do

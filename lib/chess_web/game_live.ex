@@ -33,8 +33,6 @@ defmodule ChessWeb.GameLive do
         %{"square" => square},
         %{assigns: %{first_square_clicked: nil}} = socket
       ) do
-    IO.inspect(square, label: "click:square event | first click")
-
     socket =
       socket
       |> highlight_clicked_square(square)
@@ -48,8 +46,6 @@ defmodule ChessWeb.GameLive do
         %{"square" => square},
         %{assigns: %{first_square_clicked: first_square_clicked}} = socket
       ) do
-    IO.inspect(square, label: "click:square event | second click")
-
     socket =
       socket
       |> remove_highlight_from_square(first_square_clicked)
@@ -59,11 +55,7 @@ defmodule ChessWeb.GameLive do
     {:noreply, socket}
   end
 
-  def handle_event("click:square", %{"square" => square}, socket) do
-    IO.inspect(square, label: "click:square event | fallback")
-    IO.inspect(socket.assigns.first_square_clicked)
-    # first_square_clicked
-    # is first click or second click?
+  def handle_event("click:square", %{"square" => _square}, socket) do
     {:noreply, socket}
   end
 
@@ -80,12 +72,10 @@ defmodule ChessWeb.GameLive do
   end
 
   defp remove_highlight_from_square(%{assigns: %{board: board}} = socket, square) do
-    IO.inspect(square, label: "remove highlight from square")
     assign(socket, :board, Board.remove_highlight_from_square(board, square))
   end
 
   defp highlight_clicked_square(%{assigns: %{board: board}} = socket, square) do
-    IO.inspect(square, label: "highlight square")
     assign(socket, :board, Board.highlight_square(board, square))
   end
 
