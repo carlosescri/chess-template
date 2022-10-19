@@ -6,11 +6,7 @@ defmodule Chess.Gameplay.Rook do
   alias Chess.Gameplay.Board
 
   def moves(board, pos) do
-    Enum.reduce(
-      directions(),
-      [],
-      fn dir, acc -> acc ++ Board.generate_moves(board, pos, dir) end
-    )
+    Enum.reduce(directions(), [], &(&2 ++ Board.generate_moves(board, pos, &1)))
   end
 
   ###########
