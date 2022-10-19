@@ -1,0 +1,34 @@
+<section>
+  <div class="hd-section-left">
+    <h3>Game</h3>
+  </div>
+  <div class="hd-section-right">
+    <h3>Turn: <%= @state.turn %></h3>
+    <h5><%= outcome(@state) %></h5>
+  </div>
+
+
+  <div class="board">
+    <%= for row <- 7..0 do %>
+      <%= for col <- 0..7 do %>
+        <div
+          class={get_classes(@selected_pos, col, row)}
+          phx-click="select_sq"
+          phx-value-pos={pos_to_s({col, row})}
+        >
+          <div class={piece_render(@state.board[{col, row}])}></div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="btm-section">
+    <h4>Captures:</h4>
+      <%= for captured <- @state.captured_pieces do %>
+        <div class="captured">
+          <div class={"captured-piece #{piece_render(captured)}"}></div>
+        </div>
+      <% end %>
+  </div>
+
+</section>

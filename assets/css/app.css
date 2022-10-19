@@ -123,6 +123,14 @@
   Chess CSS
 */
 
+.hd-section-left {
+  float: left;
+}
+
+.hd-section-right {
+  float: right;
+}
+
 .board {
   --square-size: 80px;
   box-sizing: content-box;
@@ -133,6 +141,10 @@
   display: grid;
   grid-template-columns: repeat(8, var(--square-size));
   grid-template-rows: repeat(8, var(--square-size));
+}
+
+.board .selected {
+  border: 3px dotted #1b1851;
 }
 
 .square {
@@ -192,4 +204,16 @@
 
 .figure.rook {
   background-position-x: -182.5px;
+}
+
+.btm-section {
+  margin-top: 2rem;
+}
+
+.captured {
+  margin: 0 auto;
+}
+
+.captured-piece {
+  float: left;
 }
