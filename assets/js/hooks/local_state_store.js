@@ -13,10 +13,9 @@ export const Storage = {
   },
 
   restore(obj) {
-    console.log(sessionStorage);
     let username = sessionStorage.getItem(obj.username)
     let room = sessionStorage.getItem(obj.room)
-    this.pushEvent("restoreSettings", {"username": username, "room": room})
+    this.pushEvent("restore", {"username": username, "room": room})
   },
 
   redirect(obj) {

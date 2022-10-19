@@ -1,4 +1,4 @@
-defmodule ChatWeb.Presence do
+defmodule ChessWeb.Presence do
   @moduledoc """
   Provides presence tracking to channels and processes.
 
@@ -6,5 +6,5 @@ defmodule ChatWeb.Presence do
   docs for more details.
   """
   use Phoenix.Presence, otp_app: :chat,
-                        pubsub_server: Chat.PubSub
+                        pubsub_server: Chess.PubSub
 end
