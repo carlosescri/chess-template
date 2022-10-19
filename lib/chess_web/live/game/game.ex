@@ -25,6 +25,7 @@ defmodule ChessWeb.GameLive.Game do
         |> assign(:user, user)
         |> assign(:selected, nil)
         |> assign(:players, MapSet.to_list(game.players))
+        |> assign(:viewers, MapSet.to_list(game.viewers))
         |> assign(:figures, Game.get_player_figures(game, user))
       }
     else
@@ -54,7 +55,7 @@ defmodule ChessWeb.GameLive.Game do
       socket
       |> assign(:game, game)
       |> assign(:players, MapSet.to_list(game.players))
-      |> assign(:is_leader, Map.get(game, :leader) == socket.assigns.user)
+      |> assign(:viewers, MapSet.to_list(game.viewers))
     }
   end
 

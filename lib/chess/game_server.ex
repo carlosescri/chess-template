@@ -101,8 +101,8 @@ defmodule Chess.GameServer do
       case {MapSet.size(game.players), MapSet.member?(game.players, player)} do
         {0, _} -> %Game{game | players: MapSet.put(game.players, player)}
         {1, false} -> %Game{game | players: MapSet.put(game.players, player), status: :ready}
-        {1, true} -> game
-        {_, _} -> %Game{game | viewers: MapSet.put(game.viewers, player)}
+        {_, true} -> game
+        {_, false} -> %Game{game | viewers: MapSet.put(game.viewers, player)}
       end
 
     broadcast(game.id, "player_connected", new_game)
