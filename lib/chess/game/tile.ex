@@ -7,11 +7,13 @@ defmodule Chess.Game.Tile do
 
   defstruct [
     :figure,
+    :coordinates,
     selected: false
   ]
 
   @type t() :: %__MODULE__{
           figure: Figure.t() | nil,
-          selected: boolean
+          selected: boolean,
+          coordinates: tuple
         }
 end

@@ -5,7 +5,7 @@ defmodule ChessWeb.Board.Helpers do
 
   use ChessWeb, :component
 
-  def tile_content(nil), do: ""
+  def tile_content(%{figure: nil}), do: ""
 
   def tile_content(assigns) do
     ~H"""
