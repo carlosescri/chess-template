@@ -209,3 +209,11 @@
 .btm-section {
   margin-top: 2rem;
 }
+
+.captured {
+  margin: 0 auto;
+}
+
+.captured-piece {
+  float: left;
+}
