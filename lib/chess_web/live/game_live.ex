@@ -36,7 +36,7 @@ defmodule ChessWeb.GameLive do
 
     socket =
       if player_figure?(game_state, tile.figure) do
-        assign(socket, :selected_tile, tile.coordinates)
+        assign(socket, :selected_tile, tile)
       else
         socket
       end
@@ -44,8 +44,17 @@ defmodule ChessWeb.GameLive do
     {:noreply, socket}
   end
 
-  @spec selected?(Tile.t(), tuple) :: boolean
-  def selected?(%{coordinates: coordinates}, coordinates), do: true
+  @spec movement_cue(Tile.t() | nil, Tile.t()) :: nil | binary
+  def movement_cue(nil, _), do: nil
+
+  def movement_cue(selected_tile, destination_tile) do
+    if Movements.allowed?(selected_tile, destination_tile) do
+      "movement-cue"
+    end
+  end
+
+  @spec selected?(Tile.t(), Tile.t()) :: boolean
+  def selected?(%{coordinates: coordinates}, %{coordinates: coordinates}), do: true
   def selected?(_, _), do: false
 
   @spec square_color(non_neg_integer) :: binary
