@@ -44,11 +44,11 @@ defmodule ChessWeb.GameLive do
     {:noreply, socket}
   end
 
-  @spec movement_cue(Tile.t() | nil, Tile.t()) :: nil | binary
-  def movement_cue(nil, _), do: nil
+  @spec movement_cue(Tile.t() | nil, Tile.t(), State.t()) :: nil | binary
+  def movement_cue(nil, _, _), do: nil
 
-  def movement_cue(selected_tile, destination_tile) do
-    if Movements.allowed?(selected_tile, destination_tile) do
+  def movement_cue(selected_tile, destination_tile, game_state) do
+    if Movements.allowed?(game_state.board, selected_tile, destination_tile) do
       "movement-cue"
     end
   end

@@ -3,6 +3,8 @@ defmodule Chess.Game do
   Game context
   """
 
+  import Chess.Game.Helpers
+
   alias Chess.Game.State
   alias Chess.Game.StateHandler
   alias Chess.Game.Tile
@@ -92,7 +94,7 @@ defmodule Chess.Game do
     |> List.update_at(62, &%Tile{&1 | figure: %Figure{color: :white, type: :knight}})
     |> List.update_at(63, &%Tile{&1 | figure: %Figure{color: :white, type: :rook}})
 
-    # |> List.update_at(27, &%Tile{&1 | figure: %Figure{color: :white, type: :knight}})
+     |> List.update_at(27, &%Tile{&1 | figure: %Figure{color: :white, type: :rook}})
   end
 
   @spec generate_game_id :: binary
@@ -101,13 +103,5 @@ defmodule Chess.Game do
     |> div(2)
     |> :crypto.strong_rand_bytes()
     |> Base.encode16(case: :lower)
-  end
-
-  @doc """
-  Transforms a list index into coordinates
-  """
-  @spec to_coord(non_neg_integer) :: tuple
-  defp to_coord(index) do
-    {rem(index, 8), div(index, 8)}
   end
 end
