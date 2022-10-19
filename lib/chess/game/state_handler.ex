@@ -5,6 +5,8 @@ defmodule Chess.Game.StateHandler do
 
   use GenServer
 
+  alias Phoenix.PubSub
+
   @impl GenServer
   def init(state) do
     {:ok, state}
@@ -16,7 +18,9 @@ defmodule Chess.Game.StateHandler do
   end
 
   @impl GenServer
-  def handle_cast({:push_state, new_state}, _state) do
+  def handle_cast({:push_state, {game_id, new_state}}, _state) do
+    # Notify state update
+    PubSub.broadcast(Chess.PubSub, game_id, :game_state_updated)
     {:noreply, new_state}
   end
 end

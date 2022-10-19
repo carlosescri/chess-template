@@ -43,7 +43,7 @@ defmodule Chess.Game do
   """
   @spec set_state(binary, State.t()) :: :ok
   def set_state(game_id, state) do
-    GenServer.cast({:global, game_id}, {:push_state, state})
+    GenServer.cast({:global, game_id}, {:push_state, {game_id, state}})
   end
 
   @spec state(binary) :: State.t()

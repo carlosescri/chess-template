@@ -16,6 +16,7 @@ defmodule ChessWeb.GameLive do
   alias Chess.Game.StateTransitions
   alias Chess.Game.Tile
   alias Phoenix.LiveView.Socket
+  alias Phoenix.PubSub
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
@@ -24,6 +25,8 @@ defmodule ChessWeb.GameLive do
 
   @impl Phoenix.LiveView
   def handle_params(%{"game_id" => game_id}, _uri, socket) do
+    if connected?(socket), do: PubSub.subscribe(Chess.PubSub, game_id)
+
     socket =
       socket
       |> assign(:game_id, game_id)
@@ -33,31 +36,18 @@ defmodule ChessWeb.GameLive do
   end
 
   @impl Phoenix.LiveView
+  def handle_info(:game_state_updated, %{assigns: %{game_id: game_id}} = socket) do
+    new_state = Game.state(game_id)
+    {:noreply, assign(socket, game_state: new_state)}
+  end
+
+  @impl Phoenix.LiveView
   def handle_event(
         "select_tile",
         %{"index" => index},
-        %{assigns: %{game_id: game_id, selected_tile: selected_tile, game_state: game_state}} = socket
+        %{assigns: %{selected_tile: nil, game_state: game_state}} = socket
       ) do
     tile = Enum.at(game_state.board, String.to_integer(index))
-
-    cond do
-      player_figure?(game_state, tile.figure) ->
-        assign(socket, :selected_tile, tile)
-
-      Movements.allowed?(game_state.board, selected_tile, tile) ->
-        # Execute movement
-        case StateTransitions.transit(:move, selected_tile, tile, game_state) do
-          {:ok, new_state} ->
-            Game.set_state(game_id, new_state)
-            socket
-
-          _ ->
-            put_flash(socket, :info, "Invalid Movement")
-        end
-
-      true ->
-        socket
-    end
 
     socket =
       if player_figure?(game_state, tile.figure) do
@@ -69,25 +59,36 @@ defmodule ChessWeb.GameLive do
     {:noreply, socket}
   end
 
+  def handle_event(
+        "select_tile",
+        %{"index" => index},
+        %{assigns: %{game_id: game_id, selected_tile: selected_tile, game_state: game_state}} =
+          socket
+      ) do
+    tile = Enum.at(game_state.board, String.to_integer(index))
 
+    socket =
+      cond do
+        player_figure?(game_state, tile.figure) ->
+          assign(socket, :selected_tile, tile)
 
-  # def handle_event(
-  #   "select_tile",
-  #   %{"index" => index},
-  #   %{assigns: %{game_state: game_state}} = socket
-  # ) do
-  #   tile = Enum.at(game_state.board, String.to_integer(index))
+        Movements.allowed?(game_state.board, selected_tile, tile) ->
+          # Execute movement
+          case StateTransitions.transit(:move, selected_tile, tile, game_state) do
+            {:ok, new_state} ->
+              Game.set_state(game_id, new_state)
+              assign(socket, :selected_tile, nil)
 
-  #   socket =
-  #     if player_figure?(game_state, tile.figure) do
-  #       assign(socket, :selected_tile, tile)
-  #     else
-  #       # Execute_movement
-  #       socket
-  #     end
+            _ ->
+              put_flash(socket, :info, "Invalid Movement")
+          end
 
-  #   {:noreply, socket}
-  # end
+        true ->
+          socket
+      end
+
+    {:noreply, socket}
+  end
 
   @spec movement_cue(Tile.t() | nil, Tile.t(), State.t()) :: nil | binary
   def movement_cue(nil, _, _), do: nil
@@ -120,5 +121,6 @@ defmodule ChessWeb.GameLive do
       state in [:play_black, :play_black_check]
     end
   end
+
   defp player_figure?(_, _), do: false
 end

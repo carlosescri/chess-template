@@ -20,7 +20,8 @@ defmodule Chess.Game.StateTransitions do
 
   @spec transit(:move, Tile.t(), Tile.t(), State.t()) ::
           {:ok, State.t()} | {:error, atom, State.t()}
-  def transit(:move, %{figure: figure} = from_tile, to_tile, %{board: board} = state) when not is_nil(figure) do
+  def transit(:move, %{figure: figure} = from_tile, to_tile, %{board: board} = state)
+      when not is_nil(figure) do
     if Movements.allowed?(board, from_tile, to_tile) do
       from_figure = from_tile.figure
 
