@@ -30,7 +30,9 @@ defmodule ChessWeb.GameLive.Index do
   def handle_event("select", %{"player" => figure_color, "cor" => cor } = params,
   %{assigns: %{move: move, selected_figure: selected_figure,
   board: board, prev_coordinate: prev_coordinate, player: player}} = socket) do
-    case FigureMove.kill?(params, prev_coordinate, player) do
+    IO.puts "KILL"
+    IO.inspect selected_figure
+    case FigureMove.kill?(params, prev_coordinate, player, move, selected_figure) do
       true -> update_board(cor, socket)
       false -> {:noreply, socket}
     end
