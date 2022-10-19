@@ -8,6 +8,6 @@ defmodule Chess.Table.Piece do
     :name,
     :position,
     :color,
-    alive: true,
+    alive: true
   ]
 end

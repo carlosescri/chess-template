@@ -4,5 +4,4 @@ defmodule Chess.Table.EmptyBoard do
 
   def x_axis, do: @x_axis
   def y_axis, do: @y_axis
-
 end

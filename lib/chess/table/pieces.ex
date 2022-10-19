@@ -32,7 +32,7 @@ defmodule Chess.Table.Pieces do
       %Chess.Table.Piece{name: :pawn, position: "E7", color: :black},
       %Chess.Table.Piece{name: :pawn, position: "F7", color: :black},
       %Chess.Table.Piece{name: :pawn, position: "G7", color: :black},
-      %Chess.Table.Piece{name: :pawn, position: "H7", color: :black},
+      %Chess.Table.Piece{name: :pawn, position: "H7", color: :black}
     ]
   end
 end
