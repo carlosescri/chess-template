@@ -2,6 +2,7 @@ defmodule ChessWeb.GameLive.Game do
   use ChessWeb, :live_view
 
   alias Chess.Game
+  alias Chess.Game.Figure
   alias Chess.GameServer
   alias ChessWeb.Components
 
@@ -78,9 +79,17 @@ defmodule ChessWeb.GameLive.Game do
     clicked_row = String.to_integer(row)
     clicked_col = String.to_integer(col)
 
-    case Game.select_figure(socket.assigns.game, {clicked_row, clicked_col}) do
-      :ok -> {:noreply, assign(socket, selected: {clicked_row, clicked_col})}
-      :error -> {:noreply, assign(socket, selected: nil)}
+    current_figure = socket.assigns.figures
+    with %Figure{color: color} <- Map.get(socket.assigns.game.board, {clicked_row, clicked_col}),
+      ^current_figure <- color do
+      case Game.select_figure(socket.assigns.game, {clicked_row, clicked_col}) do
+        :ok -> {:noreply, assign(socket, selected: {clicked_row, clicked_col})}
+        :error -> {:noreply, assign(socket, selected: nil)}
+      end
+    else
+      _ ->
+        Logger.info("Not a figure or not a figure you can move.")
+        {:noreply, socket}
     end
   end
 

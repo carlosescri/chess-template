@@ -122,6 +122,7 @@ defmodule Chess.GameServer do
       {:ok, new_game} ->
         broadcast(game.id, "update_board", new_game)
         {:noreply, new_game}
+
       {:error, reason} ->
         Logger.error(reason)
         {:noreply, game}

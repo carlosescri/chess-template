@@ -14,7 +14,11 @@
   <%= if @game.status == :playing do %>
     <p>Turn: <%= @game.turn %></p>
   <% end %>
-  <p>Connected players: <%= @players %></p>
+  <p>Connected players:
+    <%= for x <- @players do %>
+    <span><%= x %></span>
+    <% end %>
+  </p>
   <Components.board state={@game.board} />
 </section>
 <% else %>

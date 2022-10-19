@@ -47,15 +47,16 @@ defmodule Chess.Game do
       )
       when user == leader and turn == :white
       when user != leader and turn == :black do
-#      # TODO(Remove): Allow moving around in invalid states
-#      when turn == :no_turn
-#      when status in [:waiting_for_users, :ready, :playing] do
     %Figure{color: color} = Map.get(current_board, from)
 
     if color == turn do
       {
         :ok,
-        %__MODULE__{game | board: Board.move_figure(current_board, from, to), turn: next_turn(turn)}
+        %__MODULE__{
+          game
+          | board: Board.move_figure(current_board, from, to),
+            turn: next_turn(turn)
+        }
       }
     else
       {
@@ -63,8 +64,6 @@ defmodule Chess.Game do
         "Trying to move other player figures!"
       }
     end
-
-
   end
 
   def move_figure(game, user, _, _) do
