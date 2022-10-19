@@ -13,15 +13,8 @@ defmodule ChessWeb.GameLive do
     game = String.to_atom(game)
     start_game(game)
 
-    socket =
-      if connected?(socket) do
-        result = GameAgent.join_to_game(game, session)
-        add_flash_message(socket, result)
-      else
-        socket
-      end
-
-    {:ok, socket |> assign(:game, game)}
+    socket = join_game(socket, game, session)
+    {:ok, socket}
   end
 
   @impl Phoenix.LiveView
@@ -47,17 +40,48 @@ defmodule ChessWeb.GameLive do
     GameAgent.start_link(initial_state)
   end
 
-  defp add_flash_message(socket, :white_joined) do
-    put_flash(socket, :info, "Joined to the game as a player! You play as white")
+  defp join_game(socket, game, session) do
+    socket = default_assigns(socket, game)
+
+    socket =
+      if connected?(socket) do
+        who_joined = GameAgent.join_to_game(game, session)
+
+        socket
+        |> add_flash_message(who_joined)
+        |> add_game_role(who_joined)
+      else
+        socket
+      end
+
+    socket
   end
 
-  defp add_flash_message(socket, :black_joined) do
-    put_flash(socket, :info, "Joined to the game as a player! You play as black")
+  defp default_assigns(socket, game) do
+    socket
+    |> assign(:game, game)
+    |> assign_new(:role, fn -> nil end)
   end
 
-  defp add_flash_message(socket, :spectator_joined) do
-    put_flash(socket, :info, "Joined to the game as a viewer. Enjoy!")
+  defp add_game_role(socket, who_joined) when who_joined in [:white, :black, :viewer] do
+    assign(socket, :role, who_joined)
   end
 
-  defp add_flash_message(socket, nil), do: socket
+  defp add_game_role(socket, nil), do: assign(socket, :role, :white)
+
+  defp add_flash_message(socket, who_joined) do
+    messages = %{
+      white: "Joined to the game as a player! You play as white",
+      black: "Joined to the game as a player! You play as black",
+      viewer: "Joined to the game as a viewer. Enjoy!"
+    }
+
+    message = Map.get(messages, who_joined)
+
+    if message do
+      put_flash(socket, :info, message)
+    else
+      socket
+    end
+  end
 end

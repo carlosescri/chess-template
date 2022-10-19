@@ -2,7 +2,7 @@ defmodule ChessWeb.GameAgent do
   use Agent
 
   def start_link(initial_state) do
-    Map.get(initial_state, :game) |> IO.inspect()
+    Map.get(initial_state, :game)
     Agent.start_link(fn -> initial_state end, name: Map.get(initial_state, :game))
   end
 
@@ -21,7 +21,7 @@ defmodule ChessWeb.GameAgent do
     if Map.get(players, :white) != token do
       Agent.update(name, &put_in(&1, [:players], %{players_from_state(&1) | black: token}))
       increment_people_joined(name)
-      :black_joined
+      :black
     else
       nil
     end
@@ -35,13 +35,13 @@ defmodule ChessWeb.GameAgent do
     case get_people_joined(name) do
       0 ->
         add_white_player(name, token)
-        :white_joined
+        :white
 
       1 ->
         maybe_add_black_player(name, token)
 
       _ ->
-        :spectator_joined
+        :viewer
     end
   end
 
