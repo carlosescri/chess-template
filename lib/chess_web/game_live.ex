@@ -104,13 +104,11 @@ defmodule ChessWeb.GameLive do
         <%= for y <- get_y_dimension()..1 do %>
           <%= for x <- 1..get_x_dimension() do %>
             <div class={"square #{get_square_color(y, x, @selected_square)}"}
-              phx-click="move_piece_to"
+              phx-click="move_piece"
               phx-value-square={"#{y}#{x}"}
             >
               <%= if draw_piece(x, y, @pieces) do %>
                 <div class={"figure #{draw_piece(x, y, @pieces)}"}
-                  phx-click="move_piece_from"
-                  phx-value-square={"#{y}#{x}"}
             />
               <% end %>
             </div>
@@ -135,47 +133,40 @@ defmodule ChessWeb.GameLive do
     end
 
   @doc """
-  This event is sent when a user starts a movement and receives the clicked square.
+  This event is sent when a user tries to move a piece.
 
-  As a result, the selected square is stored in the assigns to be used later.
+  This event must be launched twice. The first time, if there isn`t already any
+  selected square, the selected_square is stored in the assigns.
 
-  In first place, the users chooses the square with the piece they want to move
-  and it is completed with the event "move_piece_to" (see below).
-
-  This event can only be sent by squeares with pieces in it, as it is attached
-  to the div containing the piece.
-  """
-  @impl Phoenix.LiveView
-  def handle_event("move_piece_from", %{"square" => square}, socket) do
-    IO.inspect(square)
-    selected_square = socket.assigns.selected_square
-    IO.inspect(selected_square)
-    if square == selected_square do
-      selected_square == nil
-    end
-    {:noreply, assign(socket, :selected_square, square)}
-  end
-
-  @doc """
-  This event is sent when a user finish a movement and receives the final square.
-
-  This event has to take place only when the event "move_piece_from" has been
-  fired, so the selected_square is not nill in the assigns.
-
-  If the movement is right, it is done, firing the function "move_piece" in the
-  GameServer and it is updated.
+  If there is already a selected square in the assigns and the movement is
+  right, it is done, firing the function "move_piece" in the GameServer and it
+  is updated.
 
   This event is attached to any square of the board.
   """
   @impl Phoenix.LiveView
-  def handle_event("move_piece_to", _, %{assigns: %{selected_square: nil}} = socket), do: {:noreply, socket}
+  def handle_event("move_piece", %{"square" => square}, %{assigns: %{selected_square: nil}} = socket) do
+    if is_piece_in_square(socket, square) do
+      {:noreply, assign(socket, :selected_square, square)}
+    else
+      {:noreply, socket}
+    end
+  end
 
+  @impl Phoenix.LiveView
   def handle_event(
-    "move_piece_to",
-    %{"square" => square},
-    %{assigns: %{selected_square: selected_square}} = socket) do
-    GameServer.move_piece(socket.assigns.pid, %{"old_square" => selected_square, "new_square" => square})
-    {:noreply, handle_piece_moved(socket, square)}
+    "move_piece",
+    %{"square" => square}, %{assigns: %{selected_square: selected_square}} = socket)
+  do
+    if is_valid_movement(socket, square) do
+      GameServer.move_piece(socket.assigns.pid, %{"old_square" => selected_square, "new_square" => square})
+      {:noreply, handle_piece_moved(socket)}
+    else
+      {:noreply,
+        socket
+        |> put_flash(:error, "Invalid movement")
+        |> assign(:selected_square, nil)}
+    end
   end
 
   @doc """
@@ -186,13 +177,40 @@ defmodule ChessWeb.GameLive do
   Also, a flash message is displayed to let the user know that the movement has
   been done.
   """
-  def handle_piece_moved(
-    %{assigns: %{pieces: pieces, selected_square: selected_square}} = socket,
-    square
-  ) do
+  def handle_piece_moved(%{assigns: %{pieces: pieces, selected_square: selected_square}} = socket) do
     ChessWeb.Endpoint.broadcast(socket.assigns.chess_game_topic_id, "piece_moved", %{})
     socket
     |> put_flash(:info, "Movement submitted successfully")
     |> assign(:selected_square, nil)
+  end
+
+  @doc """
+  This is a small function to check if a movement is valid.any()
+
+  Checks if in the final square of the movement there is already a piece of the
+  same color than the one that is moving.
+
+  This logic should be improved, including validation rules for any kind of
+  piece, checking if the final square can be reached for the piece is moving.
+
+  It should check too if there is a blocking piece in the middle or if the
+  piece to be moved is stuck because the king is in a menace by another piece
+  of the other player.
+  """
+  def is_valid_movement(socket, square) do
+    if is_piece_in_square(socket, square) do
+      pieces = socket.assigns.pieces
+      selected_square = socket.assigns.selected_square
+      is_same_color(Map.get(pieces, selected_square), Map.get(pieces, square))
+    else
+      true
+    end
+  end
+
+  defp is_same_color({first_color, _}, {second_color, _}), do: first_color != second_color
+
+  defp is_piece_in_square(socket, square) do
+    pieces = socket.assigns.pieces
+    is_map_key(pieces, square)
   end
 end
