@@ -101,8 +101,8 @@ defmodule ChessWeb.GameLive do
     ~H"""
     <section>
       <div class="board">
-        <%= for y <- 8..1 do %>
-          <%= for x <- 1..8 do %>
+        <%= for y <- get_y_dimension()..1 do %>
+          <%= for x <- 1..get_x_dimension() do %>
             <div class={"square #{get_square_color(y, x, @selected_square)}"}
               phx-click="move_piece_to"
               phx-value-square={"#{y}#{x}"}
