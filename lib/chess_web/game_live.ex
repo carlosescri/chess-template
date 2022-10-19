@@ -159,8 +159,15 @@ defmodule ChessWeb.GameLive do
     %{"square" => square}, %{assigns: %{selected_square: selected_square}} = socket)
   do
     if is_valid_movement(socket, square) do
-      GameServer.move_piece(socket.assigns.pid, %{"old_square" => selected_square, "new_square" => square})
+      if is_winning_condition(socket, square) do
+        {:noreply,
+        socket
+        |> put_flash(:info, "You won")
+        |> assign(:selected_square, nil)}
+      else
+        GameServer.move_piece(socket.assigns.pid, %{"old_square" => selected_square, "new_square" => square})
       {:noreply, handle_piece_moved(socket)}
+      end
     else
       {:noreply,
         socket
@@ -205,6 +212,12 @@ defmodule ChessWeb.GameLive do
     else
       true
     end
+  end
+
+  def is_winning_condition(socket, square) do
+    pieces = socket.assigns.pieces
+    {_, kind} = Map.get(pieces, square)
+    kind == "king"
   end
 
   defp is_same_color({first_color, _}, {second_color, _}), do: first_color != second_color
