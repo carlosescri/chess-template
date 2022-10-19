@@ -40,11 +40,4 @@ defmodule Chess.Board do
 
   def black_into_class(true), do: "black"
   def black_into_class(false), do: "white"
-
-  def type_into_class("k"), do: "king"
-  def type_into_class("q"), do: "queen"
-  def type_into_class("r"), do: "rook"
-  def type_into_class("b"), do: "bishop"
-  def type_into_class("kn"), do: "knight"
-  def type_into_class("p"), do: "pawn"
 end
