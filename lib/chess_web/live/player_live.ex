@@ -77,6 +77,13 @@ defmodule ChessWeb.PlayerLive do
      |> assign(state: new_state)}
   end
 
+  def handle_info({:opponent_won, new_state}, socket) do
+    {:noreply,
+     socket
+     |> put_flash(:info, "KING IS DEAD. Your opponent has won.")
+     |> assign(state: new_state)}
+  end
+
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -138,6 +145,9 @@ defmodule ChessWeb.PlayerLive do
     case GameServer.move(socket.assigns.game_name, {piece, position}) do
       {:ok, state} ->
         socket |> set_turn(state) |> assign(state: state)
+
+      {:king_died, state} ->
+          socket |> put_flash(:info, "KING IS DEAD. You won! Congratulations.") |> assign(state: state)
 
       {:error, "illegal movement"} ->
         put_flash(socket, :error, "Your piece can't move that way. Try again.")

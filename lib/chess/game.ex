@@ -58,7 +58,7 @@ defmodule Chess.Game do
 
   def move(state, movement, player) do
     if legal_move?(state, movement, player) do
-      {:ok, apply_movement(state, movement, player)}
+      apply_movement(state, movement, player)
     else
       {:error, "illegal movement"}
     end
@@ -77,10 +77,17 @@ defmodule Chess.Game do
       |> Map.get(opponent(player))
       |> Enum.reject(&(&1 == eaten_piece))
 
-    state
-    |> Map.put(player, player_updated_pieces)
-    |> Map.put(opponent(player), opponent_updated_pieces)
-    |> Map.put(:turn, opponent(player))
+    state =
+      state
+      |> Map.put(player, player_updated_pieces)
+      |> Map.put(opponent(player), opponent_updated_pieces)
+      |> Map.put(:turn, opponent(player))
+
+    if Map.get(eaten_piece || %{}, :type) == :king do
+      {:king_died, Map.put(state, :turn, nil)}
+    else
+      {:ok, state}
+    end
   end
 
   defp legal_move?(state, {piece, {x, y}}, _player) do

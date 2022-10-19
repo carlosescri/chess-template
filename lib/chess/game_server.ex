@@ -49,6 +49,15 @@ defmodule Chess.GameServer do
 
         {:reply, {:ok, new_game}, {new_game, players}}
 
+      {:king_died, new_game} ->
+        Process.send(
+          get_the_other_pid(pid, players),
+          {:opponent_won, new_game},
+          []
+        )
+
+        {:reply, {:king_died, new_game}, {new_game, players}}
+
       {:error, msg} ->
         {:reply, {:error, msg}, state}
     end
