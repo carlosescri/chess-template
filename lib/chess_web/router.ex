@@ -16,7 +16,7 @@ defmodule ChessWeb.Router do
 
   scope "/", ChessWeb do
     pipe_through :browser
-
+    live "/game/:id", ChessLive
     get "/", PageController, :index
   end
 
