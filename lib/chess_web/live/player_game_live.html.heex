@@ -37,4 +37,14 @@
 <% else %>
 	<div>The game is full</div>
 <% end %>
-<h1><%= Enum.count(@game_state.spectators) %> Live viewers, <%= @game_state.turn %> Moves </h1>
+<h1><%= Enum.count(@game_state.spectators) %> Live viewers, Turn: <%= @game_state.turn %> Moves
+	<%= if @game_state.jaque_to do %>
+		, <%= @game_state.jaque_to %> king is in Jaque
+	<% end %>
+</h1>
+<div>
+	<h1>Deleted Figures</h1>
+	<%= for figure <- @game_state.deleted_figures do %>
+		<div class={"figure #{Atom.to_string(figure.player)} #{Atom.to_string(figure.type)}"} ></div>
+	<% end %>
+</div>
