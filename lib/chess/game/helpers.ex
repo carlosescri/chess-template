@@ -10,4 +10,11 @@ defmodule Chess.Game.Helpers do
   """
   @spec to_index({non_neg_integer, non_neg_integer}) :: non_neg_integer
   def to_index({col, row}), do: col * 8 + row
+
+  @doc """
+  Returns true if the white player is in its turn
+  """
+  @spec white_turn?(State.t()) :: boolean
+  def white_turn?(%{game_state: state}) when state in [:play_white, :play_white_check], do: true
+  def white_turn?(_), do: false
 end

@@ -13,6 +13,7 @@ defmodule ChessWeb.GameLive do
   alias Chess.Game.Figure
   alias Chess.Game.Movements
   alias Chess.Game.State
+  alias Chess.Game.StateTransitions
   alias Chess.Game.Tile
   alias Phoenix.LiveView.Socket
 
@@ -23,16 +24,40 @@ defmodule ChessWeb.GameLive do
 
   @impl Phoenix.LiveView
   def handle_params(%{"game_id" => game_id}, _uri, socket) do
-    {:noreply, assign_game_state(socket, game_id)}
+    socket =
+      socket
+      |> assign(:game_id, game_id)
+      |> assign_game_state()
+
+    {:noreply, socket}
   end
 
   @impl Phoenix.LiveView
   def handle_event(
         "select_tile",
         %{"index" => index},
-        %{assigns: %{game_state: game_state}} = socket
+        %{assigns: %{game_id: game_id, selected_tile: selected_tile, game_state: game_state}} = socket
       ) do
     tile = Enum.at(game_state.board, String.to_integer(index))
+
+    cond do
+      player_figure?(game_state, tile.figure) ->
+        assign(socket, :selected_tile, tile)
+
+      Movements.allowed?(game_state.board, selected_tile, tile) ->
+        # Execute movement
+        case StateTransitions.transit(:move, selected_tile, tile, game_state) do
+          {:ok, new_state} ->
+            Game.set_state(game_id, new_state)
+            socket
+
+          _ ->
+            put_flash(socket, :info, "Invalid Movement")
+        end
+
+      true ->
+        socket
+    end
 
     socket =
       if player_figure?(game_state, tile.figure) do
@@ -43,6 +68,26 @@ defmodule ChessWeb.GameLive do
 
     {:noreply, socket}
   end
+
+
+
+  # def handle_event(
+  #   "select_tile",
+  #   %{"index" => index},
+  #   %{assigns: %{game_state: game_state}} = socket
+  # ) do
+  #   tile = Enum.at(game_state.board, String.to_integer(index))
+
+  #   socket =
+  #     if player_figure?(game_state, tile.figure) do
+  #       assign(socket, :selected_tile, tile)
+  #     else
+  #       # Execute_movement
+  #       socket
+  #     end
+
+  #   {:noreply, socket}
+  # end
 
   @spec movement_cue(Tile.t() | nil, Tile.t(), State.t()) :: nil | binary
   def movement_cue(nil, _, _), do: nil
@@ -62,8 +107,8 @@ defmodule ChessWeb.GameLive do
     if Integer.is_even(idx + div(idx, 8)), do: "white", else: "black"
   end
 
-  @spec assign_game_state(Socket.t(), binary) :: Socket.t()
-  defp assign_game_state(socket, game_id) do
+  @spec assign_game_state(Socket.t()) :: Socket.t()
+  defp assign_game_state(%{assigns: %{game_id: game_id}} = socket) do
     assign(socket, :game_state, Game.state(game_id))
   end
 
@@ -75,4 +120,5 @@ defmodule ChessWeb.GameLive do
       state in [:play_black, :play_black_check]
     end
   end
+  defp player_figure?(_, _), do: false
 end

@@ -38,9 +38,17 @@ defmodule Chess.Game do
     :ok
   end
 
+  @doc """
+  Sets a new state for the game
+  """
+  @spec set_state(binary, State.t()) :: :ok
+  def set_state(game_id, state) do
+    GenServer.cast({:global, game_id}, {:push_state, state})
+  end
+
   @spec state(binary) :: State.t()
   def state(game_id) do
-    GenServer.call({:global, game_id}, :state)
+    GenServer.call({:global, game_id}, :get_state)
   end
 
   @spec build_new_game_state(binary) :: State.t()
