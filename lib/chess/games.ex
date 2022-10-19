@@ -8,50 +8,14 @@ defmodule Chess.Games do
 
   @type cell :: {non_neg_integer(), non_neg_integer()}
 
-  @spec new :: Game.t()
-  def new do
+  @spec new(atom) :: Game.t()
+  def new(game_name) do
     %Game{
       white_player: %{
-        pieces: %{
-          {0, 0} => :rook,
-          {0, 1} => :knight,
-          {0, 2} => :bishop,
-          {0, 3} => :king,
-          {0, 4} => :queen,
-          {0, 5} => :bishop,
-          {0, 6} => :knight,
-          {0, 7} => :rook,
-          {1, 0} => :pawn,
-          {1, 1} => :pawn,
-          {1, 2} => :pawn,
-          {1, 3} => :pawn,
-          {1, 4} => :pawn,
-          {1, 5} => :pawn,
-          {1, 6} => :pawn,
-          {1, 7} => :pawn
-        },
         pid: nil,
         name: nil
       },
       black_player: %{
-        pieces: %{
-          {7, 0} => :rook,
-          {7, 1} => :knight,
-          {7, 2} => :bishop,
-          {7, 3} => :king,
-          {7, 4} => :queen,
-          {7, 5} => :bishop,
-          {7, 6} => :knight,
-          {7, 7} => :rook,
-          {6, 0} => :pawn,
-          {6, 1} => :pawn,
-          {6, 2} => :pawn,
-          {6, 3} => :pawn,
-          {6, 4} => :pawn,
-          {6, 5} => :pawn,
-          {6, 6} => :pawn,
-          {6, 7} => :pawn
-        },
         pid: nil,
         name: nil
       },
@@ -90,27 +54,28 @@ defmodule Chess.Games do
         {7, 6} => {:black, :pawn}
       },
       player_turn: nil,
-      game_name: Enum.random(?a..?z)
+      game_name: game_name
     }
   end
 
   @spec join_player(Game.t(), map) :: {:error, binary} | Chess.Games.Game.t()
-  def join_player(%Game{white_player: %{name: nil}} = game, player) do
-    white_player = Map.put(game.white_player, :name, Map.get(player, :name, nil))
-    Map.put(game, :white_player, white_player)
+  def join_player(pid, %Game{white_player: %{name: nil}} = game) do
+    white_player = game.white_player |> Map.put(:name, "WHITE") |> Map.put(:pid, pid)
+    updated_game = Map.put(game, :white_player, white_player)
+
+    {:ok, updated_game}
   end
 
-  def join_player(%Game{black_player: %{name: nil}} = game, player) do
-    black_player = Map.put(game.black_player, :name, Map.get(player, :name, nil))
+  def join_player(pid, %Game{black_player: %{name: nil}} = game) do
+    black_player = game.white_player |> Map.put(:name, "BLACK") |> Map.put(:pid, pid)
+    updated_game = Map.put(game, :black_player, black_player)
 
-    game
-    |> Map.put(:black_player, black_player)
-    |> Map.put(:player_turn, :white)
+    {:ok, updated_game}
   end
 
-  def join_player(_, player) do
+  def join_player(_, _game) do
     {:error,
-     "The player #{player.name} cannot join the game because there are already two players"}
+     "The player cannot join the game because there are already two players"}
   end
 
   @spec execute_move(Chess.Games.Game.t(), tuple, tuple) ::
@@ -120,7 +85,7 @@ defmodule Chess.Games do
         {origin_cell_x, origin_cell_y} = origin_cell,
         {final_cell_x, final_cell_y}
       ) do
-    case game.black_player.pieces[origin_cell] do
+    case game.white_player.pieces[origin_cell] do
       nil ->
         {:error, "the origin cell is empty"}
 
