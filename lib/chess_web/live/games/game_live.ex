@@ -258,7 +258,6 @@ defmodule ChessWeb.Games.GameLive do
   end
 
   def handle_event("black_click", %{"piece" => piece}, socket) do
-    IO.inspect(socket.assigns.turn, label: "turn?? ==========")
     if socket.assigns.turn == "black" do
       piece = "#{piece}"
       # Each piece will have diferent weight
@@ -276,7 +275,6 @@ defmodule ChessWeb.Games.GameLive do
     end
 
     def handle_event("white_click", %{"piece" => piece}, socket) do
-      IO.inspect(socket.assigns.turn, label: "turn?? ==========")
       if socket.assigns.turn == "white" do
         piece = "#{piece}"
         # Each piece will have diferent weight
@@ -295,7 +293,6 @@ defmodule ChessWeb.Games.GameLive do
 
 
       def handle_event("white_click", %{"piece" => piece}, socket) do
-        IO.inspect(socket.assigns.turn, label: "turn?? ==========")
         if socket.assigns.turn == "white" do
           piece = "#{piece}"
           # Each piece will have diferent weight
@@ -314,8 +311,6 @@ defmodule ChessWeb.Games.GameLive do
 
       def handle_event("square_click", %{"square" => square}, socket) do
         square = "#{square}"
-        IO.inspect(socket.assigns.piece, label: "piece?? ==========")
-        IO.inspect(square, label: "square?? ==========")
         if not is_nil(socket.assigns.piece) do
           # Each piece will have diferent weight
           #score_white = socket.assigns.score_white + 100
