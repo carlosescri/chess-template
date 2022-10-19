@@ -1,0 +1,4 @@
+<%= case @mode do %>
+  <% :not_allowed -> %> <%= render("not_allowed_mode.html", assigns) %>
+  <% :setting     -> %> <%= render("setting_mode.html", assigns)  %>
+<% end %>

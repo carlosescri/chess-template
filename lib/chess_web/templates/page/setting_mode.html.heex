@@ -1,0 +1,17 @@
+<div class = "setting panel">
+  <div class = "board">
+    <%= render("board.html", mode: :setting, 
+                             cell_selected: @state.first_cell_selected,
+                             player: nil, board: @state.board) %>
+  </div>
+</div>
+
+<div class="info_game">
+  <span><%= @info %></span>
+</div>
+
+<%= if @state.ready do %>
+  <div class="over_messages">
+    <span>Waiting for the enemy to set their ...</span>
+  </div>
+<% end %>

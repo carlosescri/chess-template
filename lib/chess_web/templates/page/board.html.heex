@@ -1,0 +1,18 @@
+<%= for row <- 1..8 do %>
+  <%= for column <- 1..8 do %>
+    <div class={"square 
+        #{cond do
+            is_even(row) && rem(column, 2) == 1 -> "white"
+            !is_even(row) && rem(column, 2) == 0 -> "white"
+            true ->"black"
+          end }
+        #{if @cell_selected == {row, column}, do: "selected"}"}
+      phx-click="cell_selected" phx-value-row={row} phx-value-column={column} phx-value-player={@player}}>
+        <% key = String.to_atom("pos#{row}_#{column}") %>
+        <%= if @board[key] != :empty do %>
+          <% figure = String.replace(Atom.to_string(@board[key]), "_", " ") %>
+          <div class={"figure #{figure}"}></div>
+        <% end %>
+    </div>
+  <% end %>
+<% end %>
