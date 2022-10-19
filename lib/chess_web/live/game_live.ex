@@ -30,9 +30,7 @@ defmodule ChessWeb.GameLive do
     with {:ok, pos} <- Position.parse(pos) do
       case socket.assigns.selected_pos do
         ^pos ->
-          {:noreply,
-            socket
-            |> assign(selected_pos: nil)}
+          {:noreply, assign(socket, selected_pos: nil)}
 
         _ ->
           case socket.assigns.selected_pos do
@@ -44,12 +42,12 @@ defmodule ChessWeb.GameLive do
                 {:noreply, assign(socket, state: state, selected_pos: nil)}
               else
                 {:error, msg} ->
-                  {:noreply, socket |> put_flash(:error, msg)}
+                  {:noreply, put_flash(socket, :error, msg)}
               end
           end
       end
     else
-      {:error, msg} -> {:noreply, socket |> put_flash(:error, msg)}
+      {:error, msg} -> {:noreply, put_flash(socket, :error, msg)}
     end
   end
 
@@ -62,9 +60,7 @@ defmodule ChessWeb.GameLive do
   def handle_cast({:new_time, time}, socket) do
     {
       :noreply,
-      socket
-      |> assign_current_time
-      |> assign_player_time(time)
+      assign_player_time(socket, time)
     }
   end
 
