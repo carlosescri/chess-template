@@ -79,6 +79,7 @@ classDiagram
         -bool white
     }
     class ChessPiece{
+        -int id
         -bool white
         -str type
     }
