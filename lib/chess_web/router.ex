@@ -19,9 +19,4 @@ defmodule ChessWeb.Router do
 
     live "/", GameLive, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ChessWeb do
-  #   pipe_through :api
-  # end
 end
