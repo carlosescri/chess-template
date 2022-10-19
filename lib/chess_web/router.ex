@@ -26,7 +26,7 @@ defmodule ChessWeb.Router do
     pipe_through :browser
 
     live_session :games do
-      live "/:game_id", GameLive, :index
+      live "/:game", GameLive, :index
     end
   end
 
