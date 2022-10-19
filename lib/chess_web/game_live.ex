@@ -59,9 +59,8 @@ defmodule ChessWeb.GameLive do
 
       {:noreply, socket}
     else
-      # new_board = Board.move_piece(board, first_square_clicked, square)
-      # {:noreply, assign(socket, :board, new_board)}
-      {:noreply, socket}
+      new_board = Board.move_piece(board, first_square_clicked, square)
+      {:noreply, assign(socket, :board, new_board)}
     end
   end
 

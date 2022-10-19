@@ -10,6 +10,10 @@ defmodule ChessWeb.Board do
     board |> get_square_info(square) |> get_piece_color()
   end
 
+  def update_square_info(board, square, value) do
+    Map.update!(board, square, fn _ -> value end)
+  end
+
   def highlight_square(board, square) do
     unless empty_square?(board, square) do
       {_, updated} =
@@ -31,10 +35,18 @@ defmodule ChessWeb.Board do
   end
 
   def move_piece(board, from, to) do
-    value = Map.get(board, from)
-    piece = parse_piece(value)
-    allowed_moves = Moves.allowed_moves(piece, from)
-    board
+    value = Map.get(board, from) |> IO.inspect()
+    piece = parse_piece(value) |> IO.inspect()
+    allowed_moves = Moves.allowed_moves(piece, from) |> IO.inspect()
+
+    if Enum.member?(allowed_moves, to) do
+      board
+      |> update_square_info(to, value)
+      |> update_square_info(from, "")
+      |> remove_highlight_from_square(to)
+    else
+      board
+    end
   end
 
   def empty_square?(board, square) do
