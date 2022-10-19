@@ -23,6 +23,11 @@ defmodule ChessWeb.GameLive do
   end
 
   @impl Phoenix.LiveView
+  def handle_event(_event, _params, %{assigns: %{role: role}} = socket)
+      when role not in [:white, :black] do
+    {:noreply, put_flash(socket, :error, "Can't play as a viewer")}
+  end
+
   def handle_event("click:square", %{"square" => _square}, socket) do
     # is first click or second click?
     {:noreply, socket}
