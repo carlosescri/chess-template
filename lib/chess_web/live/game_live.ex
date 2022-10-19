@@ -16,7 +16,7 @@ defmodule ChessWeb.GameLive do
            assign(socket,
              mode: :setting,
              state: %SettingStruct{board: state.board},
-             info: "CLICK!"
+             info: "CLICK A FIGURE!"
            )}
 
         IO.inspect(ready, label: "socket")
