@@ -64,6 +64,8 @@ defmodule Chess.Game do
     end
   end
 
+  # priv
+
   defp apply_movement(state, {piece, {x, y}}, player) do
     player_updated_pieces =
       state
