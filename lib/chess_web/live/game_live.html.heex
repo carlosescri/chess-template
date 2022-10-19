@@ -1,11 +1,19 @@
-<section class="phx-hero">
-  <h3>Game</h3>
-  <p><%= @now %></p>
-  <p>White:
-    <%= if @white_time != 0 do seconds_to_str(@white_time) else "out of time" end %>
-    | Black:
-    <%= if @black_time != 0 do seconds_to_str(@black_time) else "out of time" end %>
-  </p>
+<section>
+  <div class="hd-section-left">
+    <h3>Game</h3>
+    <p>
+      White:
+      <%= if @white_time != 0 do seconds_to_str(@white_time) else "out of time" end %>
+      || Black:
+      <%= if @black_time != 0 do seconds_to_str(@black_time) else "out of time" end %>
+    </p>
+  </div>
+  <div class="hd-section-right">
+    <h3>Turn: <%= @state.turn %></h3>
+    <h5><%= outcome(@state) %></h5>
+  </div>
+
+
   <div class="board">
     <%= for row <- 7..0 do %>
       <%= for col <- 0..7 do %>
@@ -20,9 +28,7 @@
     <% end %>
   </div>
 
-  <div>
-    <h3>Turn: <%= @state.turn %></h3>
-    <h5><%= outcome(@state) %></h5>
+  <div class="btm-section">
     <h4>Captures:</h4>
       <%= for captured <- @state.captured_pieces do %>
         <p><div class={piece_render(captured)}></div></p>

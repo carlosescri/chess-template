@@ -123,6 +123,14 @@
   Chess CSS
 */
 
+.hd-section-left {
+  float: left;
+}
+
+.hd-section-right {
+  float: right;
+}
+
 .board {
   --square-size: 80px;
   box-sizing: content-box;
@@ -196,4 +204,8 @@
 
 .figure.rook {
   background-position-x: -182.5px;
+}
+
+.btm-section {
+  margin-top: 2rem;
 }
