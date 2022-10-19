@@ -1,0 +1,13 @@
+<section>
+    <div class="board">
+        <%= for row <- @game_positions do %>
+            <%= for column <- row do %>
+                <div class={"square #{column.cell_color}"}>
+                    <% if column.item != false do %> 
+                        <div class={"figure #{column.item.figure_css_class}"}></div>
+                    <% end %>
+                </div>
+            <% end %>
+        <% end %>
+    </div> 
+  </section>
