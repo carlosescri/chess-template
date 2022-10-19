@@ -32,7 +32,7 @@ defmodule Chess.Game.StateTransitions do
 
       # TODO: Check adversary king "check"
       # TODO: Check adversary king "check mate"
-      transit_state = if white_turn?(state), do: :play_white, else: :play_black
+      transit_state = if white_turn?(state), do: :play_black, else: :play_white
 
       new_state =
         state
