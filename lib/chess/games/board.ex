@@ -9,17 +9,16 @@ defmodule Chess.Game.Board do
   def move_figure(board, {from_row, from_col} = from, {to_row, to_col} = to) do
     figure = Map.get(board, from)
 
-    IO.inspect(figure)
-
     case validate_move(board, figure, from, to) do
       :ok ->
-        board
-        |> Map.put(to, figure)
-        |> Map.delete(from)
+        {:ok,
+         board
+         |> Map.put(to, figure)
+         |> Map.delete(from)}
 
       :error ->
         Logger.error("Can not move figure to position.")
-        board
+        {:error, "Can not move figure to position."}
     end
   end
 

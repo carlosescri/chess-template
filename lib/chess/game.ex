@@ -50,14 +50,20 @@ defmodule Chess.Game do
     %Figure{color: color} = Map.get(current_board, from)
 
     if color == turn do
-      {
-        :ok,
-        %__MODULE__{
-          game
-          | board: Board.move_figure(current_board, from, to),
-            turn: next_turn(turn)
-        }
-      }
+      case Board.move_figure(current_board, from, to) do
+        {:error, reason} ->
+          {:error, reason}
+
+        {:ok, board} ->
+          {
+            :ok,
+            %__MODULE__{
+              game
+              | board: board,
+                turn: next_turn(turn)
+            }
+          }
+      end
     else
       {
         :error,

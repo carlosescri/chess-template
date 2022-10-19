@@ -81,8 +81,9 @@ defmodule ChessWeb.GameLive.Game do
     clicked_col = String.to_integer(col)
 
     current_figure = socket.assigns.figures
+
     with %Figure{color: color} <- Map.get(socket.assigns.game.board, {clicked_row, clicked_col}),
-      ^current_figure <- color do
+         ^current_figure <- color do
       case Game.select_figure(socket.assigns.game, {clicked_row, clicked_col}) do
         :ok -> {:noreply, assign(socket, selected: {clicked_row, clicked_col})}
         :error -> {:noreply, assign(socket, selected: nil)}
