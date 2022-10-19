@@ -54,6 +54,7 @@ defmodule ChessWeb.GameLive do
       socket
       |> remove_highlight_from_square(first_square_clicked)
       |> highlight_clicked_square(square)
+      |> assign(:first_square_clicked, square)
 
     {:noreply, socket}
   end

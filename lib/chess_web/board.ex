@@ -1,4 +1,6 @@
 defmodule ChessWeb.Board do
+  alias ChessWeb.Moves
+
   def get_square_info(board, square) do
     Map.get(board, square, "")
   end
@@ -96,5 +98,14 @@ defmodule ChessWeb.Board do
       "H7" => "figure black pawn",
       "H8" => "figure black rook"
     }
+  end
+
+  defp parse_piece(value) do
+    to_reject = ["figure", "black", "white", "highlighted"]
+
+    String.split(value, " ")
+    |> Enum.reject(&Enum.member?(to_reject, &1))
+    |> Enum.uniq()
+    |> List.first("")
   end
 end
