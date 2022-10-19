@@ -9,4 +9,10 @@
       <% end %>
     <% end %>
   </div>
+  <%= if is_king_removed?(:black, @game) do %>
+    <div class="final_game white">Player white wins</div>
+  <% end %>
+  <%= if is_king_removed?(:white, @game) do %>
+    <div class="final_game black">Player black wins</div>
+  <% end %>
 </section>

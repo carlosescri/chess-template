@@ -61,7 +61,14 @@ defmodule Chess.Movements do
   # Lineal movement for queen
   defp piece_movement(cells, %{type: :queen, color: color}, {actual_x, y}, {x, y})
        when actual_x < x,
-       do: check_next_position(cells, color, {actual_x + 1, y}, {1, 0}, abs(actual_x - x))
+       do:
+         check_next_position(
+           cells,
+           color,
+           {actual_x + 1, y},
+           {1, 0},
+           get_movements_number(actual_x, x)
+         )
 
   defp piece_movement(cells, %{type: :queen, color: color}, {actual_x, y}, {x, y})
        when actual_x > x,

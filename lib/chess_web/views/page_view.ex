@@ -9,4 +9,10 @@ defmodule ChessWeb.PageView do
   defp is_cell_selected(_piece, nil), do: ""
   defp is_cell_selected(piece, piece), do: "selected"
   defp is_cell_selected(_, _), do: ""
+
+  defp is_king_removed?(color, game) do
+    game
+    |> get_in([Access.key(color), :removed_pieces])
+    |> Enum.find(fn %{type: type} -> type == :king end) != nil
+  end
 end

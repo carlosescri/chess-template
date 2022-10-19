@@ -56,7 +56,7 @@ defmodule ChessWeb.ChessLive do
 
   # Means the user click again over the same piece so we unselect it
   defp attack_and_move(socket, _, _piece, position, position),
-    do: update_game_status(socket, :initial_position, nil)
+    do: update_game_status(socket, [Access.key(:initial_position)], nil)
 
   defp attack_and_move(socket, :error, _piece, _, _), do: error_message(socket, "Wrong movement")
 
@@ -74,7 +74,9 @@ defmodule ChessWeb.ChessLive do
          game
          |> get_in([Access.key(removed_piece.color), :removed_pieces])
          |> Enum.concat([removed_piece])
-         |> then(&update_game_status(socket, removed_piece.color, &1))
+         |> then(
+           &update_game_status(socket, [Access.key(removed_piece.color), :removed_pieces], &1)
+         )
          |> move_piece(piece, initial_position, final_position)
 
   defp change_player(%{assigns: %{game: %{next_player: :white}}}), do: :black
@@ -102,7 +104,7 @@ defmodule ChessWeb.ChessLive do
   defp set_initial_position(%{assigns: %{game: %{next_player: color}}} = socket, position, %{
          color: color
        }),
-       do: update_game_status(socket, :initial_position, position)
+       do: update_game_status(socket, [Access.key(:initial_position)], position)
 
   defp set_initial_position(
          %{assigns: %{game: %{next_player: color}}} = socket,
@@ -114,7 +116,7 @@ defmodule ChessWeb.ChessLive do
   defp update_game_status(%{assigns: %{game: game}} = socket, key, value),
     do:
       game
-      |> Map.put(key, value)
+      |> put_in(key, value)
       |> then(&assign(socket, :game, &1))
 
   defp update_game_status(

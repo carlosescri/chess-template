@@ -197,3 +197,21 @@
 .figure.rook {
   background-position-x: -182.5px;
 }
+
+.final_game {
+  font-size: 24px;
+  padding: 73px;
+  border-radius: 5px;
+  position: absolute;
+  top: 0px;
+  margin-top: 27%;
+  margin-left: 27%;
+}
+.final_game.white{
+  background-color: #f6cd9e;
+  border: 1px solid #d18b47;
+}
+.final_game.black{
+  background-color: #d18b47;
+  border: 1px solid #f6cd9e;
+}
