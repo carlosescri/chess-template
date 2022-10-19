@@ -103,13 +103,13 @@ defmodule Chess.Gameplay.Game do
       |> Board.moves(from_p, prev_moves)
       |> Enum.any?(&(&1 == to_p))
       |> negate ->
-        {:error, "It's not available move for selected piece"}
+        {:error, "This move is not available for the selected piece!"}
 
       board
       |> Board.move(from_p, to_p)
       |> Map.get(:board)
       |> Board.is_king_checked?(turn) ->
-        {:error, "The king would be in check"}
+        {:error, "The king will be in check!"}
 
       true ->
         {:ok, nil}

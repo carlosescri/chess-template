@@ -94,7 +94,7 @@ defmodule ChessWeb.GameLive do
 
   def piece_render(nil), do: nil
 
-  def piece_render(%{type: piece, colour: :white}) do
+  def piece_render(%{type: piece, colour: colour}) do
     figure =
       case piece do
         :bishop -> "bishop"
@@ -104,20 +104,7 @@ defmodule ChessWeb.GameLive do
         :queen -> "queen"
         :rook -> "rook"
     end
-    "figure white #{figure}"
-  end
-
-  def piece_render(%{type: piece, colour: :black}) do
-    figure =
-      case piece do
-        :bishop -> "bishop"
-        :king -> "king"
-        :knight -> "knight"
-        :pawn -> "pawn"
-        :queen -> "queen"
-        :rook -> "rook"
-    end
-    "figure black #{figure}"
+    "figure #{colour} #{figure}"
   end
 
   def outcome(%{outcome: :checkmate, turn: turn}), do: "#{turn} lost, checkmate!"
