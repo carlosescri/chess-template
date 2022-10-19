@@ -3,10 +3,10 @@
         <%= for row <- 0..7 do %>
             <%= for column <- 0..7 do %>
             <% square_color = if rem(row + column, 2) == 1, do: :black, else: :white %>
-                <div phx-click="send-piece" class={"square #{square_color}"}>
+                <div phx-click="select-piece" phx-value-row={row} phx-value-column={column} class={"square #{square_color}"}>
                     <% token = Map.get(@state, {row, column}) %>
                     <%= if token !== nil do %>
-                        <div phx-click="select-piece" class={"figure #{token.colour} #{token.piece}"}></div>
+                        <div class={"figure #{token.colour} #{token.piece}"}></div>
                     <% end %>
                 </div>
             <% end %>
