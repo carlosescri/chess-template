@@ -1,0 +1,22 @@
+<section>
+  <div class="board">
+    <%= for row <- 1..8 do %>
+      <%= for column <- 1..8 do %>
+        <% selected =  if @tmp_square == {column, row}, do: "selected" %>
+        <%= if rem((row + column), 2) == 0 do %>
+          <div class="square white" phx-click="select-square" phx-value-column={column} phx-value-row={row} selected={selected}>
+            <%= if Map.has_key?(@board, {column, row}) do %>
+              <Piece.print piece={Map.get(@board, {column, row})} />
+            <% end %>
+          </div>
+        <% else %>
+          <div class="square black" phx-click="select-square" phx-value-column={column} phx-value-row={row} selected={selected}>
+            <%= if Map.has_key?(@board, {column, row}) do %>
+              <Piece.print piece={Map.get(@board, {column, row})} />
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
