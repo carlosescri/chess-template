@@ -80,10 +80,7 @@ defmodule ChessWeb.GameLive do
     "square #{colour} #{selected}"
   end
 
-  def pos_to_s({c, r}) do
-    Integer.to_string(c) <> "," <> Integer.to_string(r)
-  end
-
+  def pos_to_s({c, r}), do: "#{c},#{r}"
   def pos_to_s(nil), do: nil
 
   def piece_render(nil), do: nil
@@ -109,4 +106,8 @@ defmodule ChessWeb.GameLive do
       :king -> "figure black king"
     end
   end
+
+  def outcome(%{outcome: :checkmate, turn: turn}), do: "#{turn} lost, checkmate!"
+  def outcome(%{outcome: :stalemate}), do: "Tie by stalemate!"
+  def outcome(_), do: nil
 end

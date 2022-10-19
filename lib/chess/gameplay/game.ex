@@ -6,16 +6,45 @@ defmodule Chess.Gameplay.Game do
   alias Chess.Gameplay.Board
 
 
-  def initial(), do: %{turn: :white, board: Board.initial_state(), moves: [], captured_pieces: []}
+  def initial do
+    %{turn: :white,
+      board: Board.initial_state(),
+      moves: [],
+      captured_pieces: [],
+      checked: false,
+      outcome: nil}
+  end
 
   def move(game_state, from_pos, to_pos) do
-    %{board: board, turn: turn} = game_state
+    %{board: board, turn: turn, outcome: outcome} = game_state
 
-    case Board.piece(board, from_pos) do
-      nil -> {:error, "No piece at position"}
-      %{colour: ^turn} -> exec_move(game_state, from_pos, to_pos)
-      _ -> {:error, "Not your turn"}
+    if outcome do
+      {:error, "Game has finished"}
+    else
+      case Board.piece(board, from_pos) do
+        nil -> {:error, "No piece at position"}
+        %{colour: ^turn} -> exec_move(game_state, from_pos, to_pos)
+        _ -> {:error, "Not your turn"}
+      end
     end
+  end
+
+  def checked?(%{board: board, turn: turn}) do
+    Board.is_king_checked?(board, turn)
+  end
+
+  def checkmate?(state), do: checked?(state) and no_moves_available?(state)
+
+  def stalemate?(state), do: no_moves_available?(state)
+
+
+  def no_moves_available?(state) do
+    state.board
+    |> Board.find(%{colour: state.turn})
+    |> Enum.any?(fn {pos, _} ->
+      state.board |> Board.moves(pos) |> Enum.any?(&match?({:ok, _}, valid_move?(state, pos, &1)))
+    end)
+    |> negate
   end
 
   ###########
@@ -38,17 +67,29 @@ defmodule Chess.Gameplay.Game do
 
   defp update_game_state(
          %{board: board, captured: captured, piece: piece, start_p: start_p, end_p: end_p},
-         game_state
+         %{moves: moves, turn: turn, captured_pieces: captured_pieces}
        ) do
     %{
       board: board,
-      moves:
-        (game_state
-         |> Map.get(:moves)) ++
-        [%{start_p: start_p, end_p: end_p, piece: piece}],
-      turn: game_state |> Map.get(:turn) |> flip_turn(),
-      captured_pieces: game_state |> Map.get(:captured_pieces) |> append_if_not_nil(captured)
+      moves: moves ++ [%{start_p: start_p, end_p: end_p, piece: piece}],
+      turn: flip_turn(turn),
+      captured_pieces: captured_pieces |> append_if_not_nil(captured)
     }
+    |> update_outcome()
+  end
+
+  defp update_outcome(state) do
+    state
+    |> Map.put(:checked, checked?(state))
+    |> Map.put(:outcome, outcome(state))
+  end
+
+  defp outcome(state) do
+    cond do
+      checkmate?(state) -> :checkmate
+      stalemate?(state) -> :stalemate
+      true -> nil
+    end
   end
 
   defp append_if_not_nil(list, nil), do: list
@@ -59,10 +100,16 @@ defmodule Chess.Gameplay.Game do
 
   defp valid_move?(%{board: board, turn: turn, moves: prev_moves}, from_p, to_p) do
     cond do
-      board |> Board.moves(from_p, prev_moves) |> Enum.any?(&(&1 == to_p)) |> negate ->
+      board
+      |> Board.moves(from_p, prev_moves)
+      |> Enum.any?(&(&1 == to_p))
+      |> negate ->
         {:error, "It's not available move for selected piece"}
 
-      board |> Board.move(from_p, to_p) |> Map.get(:board) |> Board.is_king_checked?(turn) ->
+      board
+      |> Board.move(from_p, to_p)
+      |> Map.get(:board)
+      |> Board.is_king_checked?(turn) ->
         {:error, "The king would be in check"}
 
       true ->
@@ -70,5 +117,5 @@ defmodule Chess.Gameplay.Game do
     end
   end
 
-  defp negate(b), do: !b
+  defp negate(val), do: !val
 end

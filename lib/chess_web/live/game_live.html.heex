@@ -1,5 +1,5 @@
 <section class="phx-hero">
-  <h3>Chess</h3>
+  <h3>Game</h3>
   <p><%= @now %></p>
   <div class="board">
     <%= for row <- 7..0 do %>
@@ -9,16 +9,19 @@
           phx-click="select_sq"
           phx-value-pos={pos_to_s({col, row})}
         >
-
           <div class={piece_render(@state.board[{col, row}])}></div>
         </div>
       <% end %>
     <% end %>
   </div>
 
-  <h3>Turn: <%= @state.turn %></h3>
-  <h4>Captures:</h4>
-    <%= for c <- @state.captured_pieces do %>
-      <p><%= piece_render(c) %></p>
-    <% end %>
+  <div>
+    <h3>Turn: <%= @state.turn %></h3>
+    <h5><%= outcome(@state) %></h5>
+    <h4>Captures:</h4>
+      <%= for captured <- @state.captured_pieces do %>
+        <p><div class={piece_render(captured)}></div></p>
+      <% end %>
+  </div>
+
 </section>
