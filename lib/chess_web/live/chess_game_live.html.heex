@@ -1,0 +1,13 @@
+ <section>
+  <div class="board">
+    <%= for {columns, row_index} <- Enum.with_index(@board) do %>
+      <%= for {{type, color}, column_index} <- Enum.with_index(columns) do %>
+      <div class={if Integer.is_even(row_index + column_index), do: "square white", else: "square black"} phx-click="clicked_figure" phx-value-position={"#{row_index},#{column_index}"}>
+        <%= if figure?(type, color) do %>
+          <div class={"figure #{color} #{type}"} phx-click="clicked_figure" phx-value-position={"#{row_index},#{column_index}"}></div>
+        <% end %>
+      </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
