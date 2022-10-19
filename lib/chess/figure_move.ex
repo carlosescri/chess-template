@@ -37,7 +37,7 @@ defmodule Chess.FigureMove do
     move_x_y(x, y)
   end
 
-  def kill?(%{"cor" => cor, "figure" => "pawn", "player" => player} = params, coordinate, active_player, _move, {_color, "pawn"}) do
+  def kill?(%{"cor" => cor, "player" => player} = params, coordinate, active_player, _move, {_color, "pawn"}) do
     [column_kill, row_kill] = String.codepoints(cor)
     row_kill = String.to_integer(row_kill)
 
