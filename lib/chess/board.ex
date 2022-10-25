@@ -15,6 +15,89 @@ defmodule Chess.Board do
       6 => generate_second_row_of_pieces(:black),
       7 => generate_first_row_of_pieces(:black)
     }
+
+    board = %{
+      0 => %{
+        0 => %Piece{color: :white, type: "rook"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "rook"}
+      },
+      1 => %{
+        0 => %Piece{color: :white, type: "knight"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "knight"}
+      },
+      2 => %{
+        0 => %Piece{color: :white, type: "bishop"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "bishop"}
+      },
+      3 => %{
+        0 => %Piece{color: :white, type: "queen"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "queen"}
+      },
+      4 => %{
+        0 => %Piece{color: :white, type: "king"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "king"}
+      },
+      5 => %{
+        0 => %Piece{color: :white, type: "bishop"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "bishop"}
+      },
+      6 => %{
+        0 => %Piece{color: :white, type: "knight"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "knight"}
+      },
+      7 => %{
+        0 => %Piece{color: :white, type: "rook"},
+        1 => %Piece{color: :white, type: "pawn"},
+        2 => nil,
+        3 => nil,
+        4 => nil,
+        5 => nil,
+        6 => %Piece{color: :black, type: "pawn"},
+        7 => %Piece{color: :black, type: "rook"}
+      }
+    }
   end
 
   def find_piece(board, x, y) do
@@ -24,10 +107,12 @@ defmodule Chess.Board do
   def move(board, piece, {origin_x, origin_y} = origin, {target_x, target_y} = target) do
     if Piece.can_move?(piece, board, origin, target) do
       piece = Map.put(piece, :first_move, false)
+
       board =
         board
         |> put_in([origin_x, origin_y], nil)
         |> put_in([target_x, target_y], piece)
+
       {:ok, board}
     end
   end

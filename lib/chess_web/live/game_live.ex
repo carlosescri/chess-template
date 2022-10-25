@@ -61,10 +61,10 @@ defmodule ChessWeb.GameLive do
       <div class="board">
       <%= for x <- 7..0 do %>
         <%= for y <- 0..7 do %>
-          <.cell x={x}
-                  y={y}
-                  piece={get_piece(@board, x, y)}
-                  selected={@selected_cell == {x,y}}
+          <.cell x={y}
+                  y={x}
+                  piece={get_piece(@board, y, x)}
+                  selected={@selected_cell == {y,x}}
                   color={if rem(x + y, 2) == 1, do: "black", else: "white"}/>
 
         <% end %>
@@ -84,6 +84,7 @@ defmodule ChessWeb.GameLive do
         <%= if @piece do %>
           <div class={"figure #{@piece.color} #{@piece.type}"}></div>
         <% end %>
+        <small><%= @x %>, <%= @y %></small>
       </div>
     """
   end

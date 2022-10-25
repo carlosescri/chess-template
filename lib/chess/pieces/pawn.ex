@@ -1,30 +1,28 @@
 defmodule Chess.Pieces.Pawn do
   alias Chess.Board
+  alias Chess.Piece
 
 
   def can_move?(%{type: "pawn"} = piece, board, origin = {or_x, or_y}, target = {tar_x, tar_y}) do
-    move_x = or_x - tar_x;
-    move_y = or_y - tar_y;
+    move_x = tar_x - or_x;
+    move_y = tar_y - or_y;
+
+    IO.puts("move from #{or_x}, #{or_y} to #{tar_x}, #{tar_y}, needs to move #{move_x} cells horizontal and #{move_y} cells vertical")
     move = {move_x,move_y}
 
-    IO.inspect(move, label: "IS this in ")
+    IO.inspect(move, label: "move units")
     valid_movements = movements(piece)
     IO.inspect(valid_movements, label: "valid_movements")
 
-    Enum.member?(movements(piece), move)
-
-
-    move_steps = Piece.generate_steps(move)
-    IO.inspect(move_steps, label: "move_steps")
-    #check if each any is blocked
+    Enum.member?(movements(piece), move) && !Piece.check_obstruction(board, origin, move)
 
 
   end
 
-  defp movements(%{color: :black, first_move: true}), do: [{1,0}, {2,0}]
-  defp movements(%{color: :black, first_move: false}), do: [{1,0}]
-  defp movements(%{color: :white, first_move: true}), do: [{-1,0}, {-2,0}]
-  defp movements(%{color: :white, first_move: false}), do: [{-1,0}]
+  defp movements(%{color: :white, first_move: true}), do: [{0,1}, {0,2}]
+  defp movements(%{color: :white, first_move: false}), do: [{0,1}]
+  defp movements(%{color: :black, first_move: true}), do: [{0,-1}, {0,-2}]
+  defp movements(%{color: :black, first_move: false}), do: [{0,-1}]
 
 
   defp capture_movements do
