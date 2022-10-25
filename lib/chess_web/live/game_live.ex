@@ -65,7 +65,7 @@ defmodule ChessWeb.GameLive do
                   y={x}
                   piece={get_piece(@board, y, x)}
                   selected={@selected_cell == {y,x}}
-                  color={if rem(x + y, 2) == 1, do: "black", else: "white"}/>
+                  color={if rem(x + y, 2) == 1, do: "white", else: "black"}/>
 
         <% end %>
       <% end %>
@@ -84,12 +84,12 @@ defmodule ChessWeb.GameLive do
         <%= if @piece do %>
           <div class={"figure #{@piece.color} #{@piece.type}"}></div>
         <% end %>
-        <small><%= @x %>, <%= @y %></small>
+        <!--<small><%= @x %>, <%= @y %></small>-->
       </div>
     """
   end
 
-  defp get_piece(board, x,y), do: board[x][y]
+  defp get_piece(board, x, y), do: board[x][y]
 
   defp move(socket, piece, {piece_x, piece_y} = origin, {target_x, target_y} = target) do
     IO.inspect(piece, label: "Piece")
@@ -97,19 +97,19 @@ defmodule ChessWeb.GameLive do
     board = socket.assigns.board
 
     with false <- Board.target_out_of_board?(target),
-    {:ok, board } <- Board.move(board, piece, origin, target) do
+         {:ok, board} <- Board.move(board, piece, origin, target) do
+      socket
+      |> assign(board: board)
+      |> assign(turn: next_turn(socket.assigns.turn))
+    else
+      _ ->
+        put_flash(socket, :error, "This move is not valid.")
+
+      nil ->
         socket
-        |> assign(board: board)
-        |> assign(turn: next_turn(socket.assigns.turn))
-      else
-        {:error, :invalid_move} ->
-          put_flash(socket, :error, "This move is not valid.")
-        nil -> socket
     end
   end
 
   defp next_turn(:white), do: :black
   defp next_turn(:black), do: :white
-
-
 end

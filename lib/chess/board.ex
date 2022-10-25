@@ -117,7 +117,7 @@ defmodule Chess.Board do
     end
   end
 
-  def target_out_of_board?({x, y}) when x > 6 or x < 0 or y > 6 or y < 0 do
+  def target_out_of_board?({x, y}) when x > 7 or x < 0 or y > 7 or y < 0 do
     true
   end
 
