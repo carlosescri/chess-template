@@ -84,7 +84,7 @@ defmodule ChessWeb.GameLive do
         <%= if @piece do %>
           <div class={"figure #{@piece.color} #{@piece.type}"}></div>
         <% end %>
-        <!--<small><%= @x %>, <%= @y %></small>-->
+        <small><%= @x %>, <%= @y %></small>
       </div>
     """
   end
@@ -97,16 +97,24 @@ defmodule ChessWeb.GameLive do
     board = socket.assigns.board
 
     with false <- Board.target_out_of_board?(target),
-         {:ok, board} <- Board.move(board, piece, origin, target) do
+         {:ok, board} <- Board.move(board, piece, origin, target, socket.assigns.turn) do
       socket
       |> assign(board: board)
       |> assign(turn: next_turn(socket.assigns.turn))
     else
-      _ ->
-        put_flash(socket, :error, "This move is not valid.")
-
       nil ->
         socket
+
+      {:error, :not_your_turn} ->
+        put_flash(socket, :error, "It's your opponents turn")
+
+      {:match_end, board} ->
+        socket
+        |> assign(board: board)
+        |> put_flash(:success, "The King is Dead")
+
+      _ ->
+        put_flash(socket, :error, "This move is not valid.")
     end
   end
 

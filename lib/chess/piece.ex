@@ -1,10 +1,12 @@
 defmodule Chess.Piece do
   alias Chess.Board
   alias Chess.Pieces.Pawn
-  # alias Chess.Pieces.King
-  # alias Chess.Pieces.Rook
+  alias Chess.Pieces.Rook
+  alias Chess.Pieces.Bishop
+
+  # TODO: Implement missing pieces
   # alias Chess.Pieces.Queen
-  # alias Chess.Pieces.Bishop
+  # alias Chess.Pieces.King
   # alias Chess.Pieces.Knight
 
   @types %{
@@ -17,12 +19,48 @@ defmodule Chess.Piece do
             type: nil,
             first_move: true
 
-  def can_move?(%{type: "pawn"} = piece, board, origin, target) do
-    Pawn.can_move?(piece, board, origin, target)
+  def can_move?(piece, board, origin = {or_x, or_y}, target = {tar_x, tar_y}) do
+    move_x = tar_x - or_x
+    move_y = tar_y - or_y
+
+    IO.puts(
+      "move from #{or_x}, #{or_y} to #{tar_x}, #{tar_y}, needs to move #{move_x} cells horizontal and #{move_y} cells vertical"
+    )
+
+    move = {move_x, move_y}
+
+    IO.inspect(move, label: "move units")
+    valid_movements = movements(piece)
+    IO.inspect(valid_movements, label: "valid_movements")
+
+    target_piece = Board.find_piece(board, tar_x, tar_y)
+
+    can_capture?(piece, target_piece, move) ||
+      (Enum.member?(valid_movements, move) && !check_obstruction(piece, board, origin, move))
   end
 
   def can_capture?(%{type: "pawn"} = piece, target_piece, move) do
     Pawn.can_capture?(piece, target_piece, move)
+  end
+
+  def movements(%{type: "pawn"} = piece) do
+    Pawn.movements(piece)
+  end
+
+  def movements(%{type: "rook"} = piece) do
+    Rook.movements(piece)
+  end
+
+  def can_capture?(%{type: "rook"} = piece, target_piece, move) do
+    Rook.can_capture?(piece, target_piece, move)
+  end
+
+  def movements(%{type: "bishop"} = piece) do
+    Bishop.movements(piece)
+  end
+
+  def can_capture?(%{type: "bishop"} = piece, target_piece, move) do
+    Bishop.can_capture?(piece, target_piece, move)
   end
 
   def check_obstruction(selected_piece, board, {x_origin, y_origin}, move) do
@@ -37,8 +75,8 @@ defmodule Chess.Piece do
         y = y_origin + y
         IO.puts("Check obstruction in pos x=#{x}, y=#{y}")
         target_piece = Board.find_piece(board, x, y)
-        if target_piece != nil && !can_capture?(selected_piece, target_piece, move) do
 
+        if target_piece != nil && !can_capture?(selected_piece, target_piece, move) do
           IO.inspect(target_piece, label: "There is a piece obstructing at #{x}, #{y}")
           {:halt, true}
         else
@@ -48,8 +86,6 @@ defmodule Chess.Piece do
 
     IO.inspect(ch_obs, label: "Obstruction result")
   end
-
-
 
   defp generate_steps({x, y} = move) do
     steps =
@@ -91,6 +127,7 @@ defmodule Chess.Piece do
   defp get_move_type({x, y}) when x == y, do: :diagonal
   defp get_move_type({x, y}) when x == 0, do: :vertical
   defp get_move_type({x, y}) when y == 0, do: :horizontal
+
   defp get_move_type(move) do
     IO.inspect(move, label: "otra condicion para diagonal")
     :diagonal
