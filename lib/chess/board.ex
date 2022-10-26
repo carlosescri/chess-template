@@ -101,7 +101,6 @@ defmodule Chess.Board do
     if Piece.can_move?(piece, board, origin, target) do
       piece = Map.put(piece, :first_move, false)
       captured_piece = find_piece(board, target_x, target_y)
-      IO.inspect(captured_piece, label: "Captured piece")
 
       if captured_piece != nil && Map.get(captured_piece, :type) == "king" do
         {:match_end, board}

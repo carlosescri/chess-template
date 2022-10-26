@@ -18,7 +18,6 @@ defmodule ChessWeb.GameLive do
       |> assign(:turn, :white)
       |> assign(:selected_cell, nil)
 
-    # IO.inspect(socket.assigns, label: "Board")
     {:ok, socket}
   end
 
@@ -28,8 +27,6 @@ defmodule ChessWeb.GameLive do
         %{"x" => x, "y" => y},
         %{assigns: %{selected_cell: nil}} = socket
       ) do
-    IO.inspect(socket.assigns.selected_cell, label: "Selected cell")
-
     {:noreply,
      socket
      |> assign(selected_cell: {String.to_integer(x), String.to_integer(y)})
@@ -48,10 +45,6 @@ defmodule ChessWeb.GameLive do
       end
 
     {:noreply, assign(socket, selected_cell: nil)}
-  end
-
-  def handle_event("cell-click", coords, socket) do
-    IO.inspect(coords, label: "Event coords")
   end
 
   @impl Phoenix.LiveView
@@ -92,8 +85,6 @@ defmodule ChessWeb.GameLive do
   defp get_piece(board, x, y), do: board[x][y]
 
   defp move(socket, piece, {piece_x, piece_y} = origin, {target_x, target_y} = target) do
-    IO.inspect(piece, label: "Piece")
-    IO.puts("Moving piece from x: #{piece_x}, y: #{piece_y} to x:#{target_x}, y:#{target_y}")
     board = socket.assigns.board
 
     with false <- Board.target_out_of_board?(target),
