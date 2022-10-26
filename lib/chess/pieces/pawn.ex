@@ -17,5 +17,5 @@ defmodule Chess.Pieces.Pawn do
   def movements(%{color: :black, first_move: true}), do: [{0, -1}, {0, -2}]
   def movements(%{color: :black, first_move: false}), do: [{0, -1}]
   defp capture_movements(%{color: :white}), do: [{-1, 1}, {1, 1}]
-  defp capture_movements(%{color: :black}), do: [{1, -1}, {-1, 1}]
+  defp capture_movements(%{color: :black}), do: [{1, -1}, {-1, -1}]
 end
